@@ -1192,7 +1192,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261113"];             
-const BUILT='2026-11-13T0021';
+const BUILT='2026-11-13T0023';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1292,10 +1292,11 @@ const lxFin=r=>!!(r.result&&r.result.order&&r.result.order.length);
 function lxDay(){ const now=new Date(), t=ymd(now); return {today:DAY===t, past:DAY<t, hm:now.getHours()*60+now.getMinutes()}; }
 function lxGone(r,X){ return lxFin(r)||(X.today&&lxMin(r)<X.hm)||X.past; }
  
-const GST=r=>(r&&r.g&&r.g.st)||0, GCAP=10;
+const GST=r=>(r&&r.g&&r.g.st)||0;
+const gTh=()=>((DATA&&DATA.gold)||{}).th||1.0, gCap=()=>((DATA&&DATA.gold)||{}).cap||10;    
 const LEG=r=>!(r&&r.g);                           
 const GXo=h=>!!(h&&h.pfo>0&&h.odds>0&&h.odds>=1.5*h.pfo);
-const colOf=(r,h)=>{ if(!h||h.scr) return 0; if(LEG(r)) return (h.ev==null||GXo(h))?0:(h.ev>=1.0?2:(h.ev>=0.9?9:0)); if(GST(r)) return h.c||0; return (!lxFin(r)&&h.ev!=null&&h.ev>=1.0&&h.odds>0&&h.odds<GCAP)?9:0; };
+const colOf=(r,h)=>{ if(!h||h.scr) return 0; if(LEG(r)) return (h.ev==null||GXo(h))?0:(h.ev>=1.0?2:(h.ev>=0.9?9:0)); if(GST(r)) return h.c||0; return (!lxFin(r)&&h.ev!=null&&h.ev>=gTh()&&h.odds>0&&h.odds<gCap())?9:0; };
 const colOn=c=>c===1||c===2||c===9;
 const colCls=(r,h)=>{ const c=colOf(r,h); return c===2?'e2':((c===1||c===9||c===4)?'e1':''); };
 const gTag=(r,h)=>{ const c=colOf(r,h); return c===4?'売れた':(c===3?'仮→色なし':''); };
@@ -1437,7 +1438,7 @@ function evSec(r,n,LK,fin){ let body='';
       const rows=all.map(h=>`<tr class="${h.scr?'scr':(HP?tier(EX(h)):colCls(r,h))}"><td class="l">${fin?rkCap(r,h):cap(h)}</td><td class="l nm">${esc(h.name)}<small>${h.scr?'取消':[h.run||'',HP?'':gTag(r,h)].filter(Boolean).join('・')}</small></td><td class="mono">${h.scr?'':pct(PX(h))+'%'}</td><td class="mono">${h.odds?h.odds.toFixed(1):'—'}</td><td class="mono evc">${h.scr?'取消':(EX(h)!=null?EX(h).toFixed(2):'—')}</td></tr>`).join('');
       body=pt+oddsBtn(r)+labelBar(L)+fxLine(r)
         +`<h3>全頭${HP?'<small>勝率は買い方で入れた自分の見立て</small>':''}</h3><div class="tw"><table class="zt"><thead><tr><th class="l">番</th><th class="l">馬名</th><th>勝率</th><th>単勝</th><th>期待値</th></tr></thead><tbody>${rows}</tbody></table></div>`
-        +`<div class="note">${hasO?(r.odds_status==='yoso'?'オッズは発売前の想定。':'オッズは'+esc(r.odds_at||'')+'時点。'):'単勝オッズは未発売のため期待値は空欄。'}${HP?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99（自分の見立ての勝率×いまのオッズ）。':LEG(r)?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99。<br>勝率を決めたあとにオッズが1.5倍以上に上がった馬は、期待値が高くても色を付けません。':'<br>金＝発走10分前に確定した馬<br>淡い金＝まだ仮の馬／確定のあとに売れた馬<br>色が付く馬＝15分前に期待値1.00以上・単勝10倍未満<br>勝率＝発走15分前に固定<br>期待値＝勝率×判定の単勝（一番低い値）<br>金色は「買えばプラス」の意味ではありません<br>成績は記録にそのまま載せています'}</div>`
+        +`<div class="note">${hasO?(r.odds_status==='yoso'?'オッズは発売前の想定。':'オッズは'+esc(r.odds_at||'')+'時点。'):'単勝オッズは未発売のため期待値は空欄。'}${HP?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99（自分の見立ての勝率×いまのオッズ）。':LEG(r)?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99。<br>勝率を決めたあとにオッズが1.5倍以上に上がった馬は、期待値が高くても色を付けません。':'<br>金＝発走10分前に確定した馬<br>淡い金＝まだ仮の馬／確定のあとに売れた馬<br>色が付く馬＝15分前に期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満<br>勝率＝発走15分前に固定<br>期待値＝勝率×判定の単勝（一番低い値）<br>金色は「買えばプラス」の意味ではありません<br>成績は記録にそのまま載せています'}</div>`
         +alertBlock(r); } }
   return `<div class="sec" id="sec-win">${sh(n,'chart','勝率・期待値',lkTag(1)+(LK?'会員':''))}${body}</div>`; }
 function alertBlock(r){ const A=(r.runners||[]).filter(h=>!h.scr&&h.alert>=1).sort((a,b)=>(b.alert-a.alert)||(a.odds-b.odds));
@@ -1558,7 +1559,7 @@ function evShape(R){
   const T=(R&&R.total)||{};
   const E={start:D.length?D[0].d:ymd(new Date()),end:D.length?D[D.length-1].d:ymd(new Date()),days:D.filter(x=>x.races_counted&&!x.x).length,races_done:T.races_done||0,races_counted:T.races_counted||0,
     gold:g(T.gold||{}),pale:g(T.pale||{}),daily:D.filter(x=>x.races_done).map(x=>({d:x.d,done:x.races_done,counted:x.races_counted,gold:g(x.gold||{}),pale:g(x.pale||{}),x:!!x.x,v:x.v||1})),
-    rule2:(R&&R.rule2)||null,excl:((R&&R.excluded)||[]).slice().sort(),nw:(R&&R.new)?{days:R.new.days||0,races_counted:R.new.races_counted||0,gold:g(R.new.gold||{})}:null};    
+    rule2:(R&&R.rule2)||null,line:(R&&R.line)||null,excl:((R&&R.excluded)||[]).slice().sort(),nw:(R&&R.new)?{days:R.new.days||0,races_counted:R.new.races_counted||0,gold:g(R.new.gold||{})}:null};    
   const bands=(T.bands||[]).map(b=>({lo:b.lo,hi:b.hi,n:b.n,calc:b.n?100*b.exp/b.n:0,real:b.n?100*b.act/b.n:0,wins:b.act}));
   const horses=bands.reduce((a,b)=>a+b.n,0);
   const C=horses?{start:E.start,end:E.end,days:D.filter(x=>x.bands&&x.bands.some(b=>b.n)).length,races:T.races_done||0,horses,bands,
@@ -1585,7 +1586,7 @@ function evBlk(E,md){
     <div class="note">${g.n?`金の${g.n}頭を100円ずつ買うと、単勝は${pct(g.win_ret)}、複勝は${pct(g.plc_ret)}戻った計算です。`:''}単勝は大きい配当に寄るので、日ごとの差が大きくなります。</div>
     <div class="sub" style="margin-top:18px">日ごと（${EVM?EVM.slice(0,4)+'年'+(+EVM.slice(4))+'月':''}）</div>${tabs}
     <table class="t"><thead><tr><th>日付</th><th>レース</th><th>金の頭数</th><th>勝ち</th><th>単勝回収率</th><th>複勝回収率</th></tr></thead><tbody id="evrows">${P.rowsHtml}</tbody></table>
-    <div class="note">${E.rule2?`${md(E.rule2)}から、色は発走15分前に仮に決め、10分前に確かめて確定しています（期待値1.00以上・単勝10倍未満）。記録は、10分前に確定した金で数えます。＊の日は前の決め方（発走1分前までに取った最後の勝率とオッズで、期待値1.0以上を金）です。`:'金は、発走1分前までに取った最後の勝率とオッズで、期待値（勝率×単勝オッズ）が1.0以上だった馬。'}${E.excl.length?`※の${E.excl.length}日（${md(E.excl[0])}〜${md(E.excl[E.excl.length-1])}）は、決め方の不具合で金が付きすぎたため（多い日は1日200頭以上。ほかの日は30頭前後）、通算に入れていません。`:''}払戻は確定の払戻（100円あたり）です。レース欄は「集計したレース／結果の出たレース」。判定の時刻のオッズや結果が取れなかったレースは数えません（確定オッズでは判定しません）。</div></div>`; }
+    <div class="note">${E.rule2?`${md(E.rule2)}から、色は発走15分前に仮に決め、10分前に確かめて確定しています（期待値${(+((E.line||{}).th||1)).toFixed(2)}以上・単勝${(E.line||{}).cap||10}倍未満）。記録は、10分前に確定した金で数えます。＊の日は前の決め方（発走1分前までに取った最後の勝率とオッズで、期待値1.0以上を金）です。`:'金は、発走1分前までに取った最後の勝率とオッズで、期待値（勝率×単勝オッズ）が1.0以上だった馬。'}${E.excl.length?`※の${E.excl.length}日（${md(E.excl[0])}〜${md(E.excl[E.excl.length-1])}）は、決め方の不具合で金が付きすぎたため（多い日は1日200頭以上。ほかの日は30頭前後）、通算に入れていません。`:''}払戻は確定の払戻（100円あたり）です。レース欄は「集計したレース／結果の出たレース」。判定の時刻のオッズや結果が取れなかったレースは数えません（確定オッズでは判定しません）。</div></div>`; }
 async function renderRecord(useCache){ const el=$('#s-record'); if(!el) return;
   if(!useCache||!RECJ){ try{ const r=await fetch(`data/record.json?v=${BUILT}`,{cache:'no-store'}); RECJ=r.ok?await r.json():null; }catch(e){ RECJ=null; } }
   const {E,C:X}=evShape(RECJ); const md=evMd;
@@ -1616,8 +1617,8 @@ function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div
   <div class="qs"><div><b>1</b><span>目次でレースを押す。色の丸はレースのラベル（<em>本線・相手・穴</em>）、小さな数字は人気裏切りアラートの数です。</span></div><div><b>2</b><span>「勝率と期待値」で色を見る。<em>金</em>は発走10分前に確定した馬、淡い金はまだ仮の馬です。</span></div><div><b>3</b><span>気になる馬を出馬表で押すと、近5走と騎手・調教師のこれまでが開きます。</span></div></div>
   ${H(1,'horse','勝率はどう決めている？','うまみのAIが、過去の地方の全レースから学んだ勝率です。うまみが「50%」と出した馬は、100頭いれば50頭ほど勝つ見込みです。',
     `<li>人気（オッズから見た勝ちやすさ）とは少し違います。うまみの勝率が人気より高い馬は「人気のわりに来る」、低い馬は「人気のわりに来ない」と見ている馬です。</li><li>出した勝率が本当にその通りだったかは、<b>記録</b>のタブで帯ごとに公開しています。</li>`)}
-  ${H(2,'coin','期待値と金色','<b>期待値＝勝率×単勝オッズ</b>。勝率どおりなら、100円の単勝がいくら戻るかの倍率です。色が付くのは<b>期待値1.00以上・単勝10倍未満</b>の馬。発走15分前に仮の色（<span class="k g2">淡い金</span>）を付け、10分前に確かめて残った馬が<span class="k g">金</span>になります。',
-    `<li>金色は「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。金の馬でも、外れることは多くあります。</li><li>発走15分前までの淡い金は、いまのオッズでの見込みです。発売前は「想定」のオッズなので目安。</li><li>勝率は発走15分前に決めて、そのあとは動かしません。10分前と5分前に、それまでの一番低い単勝で期待値を出し直します。</li><li>5分前の確かめで期待値が1.00を割った馬は「売れた」と出し、淡い金に戻します。確かめで色が増えることはありません。</li>`)}
+  ${H(2,'coin','期待値と金色','<b>期待値＝勝率×単勝オッズ</b>。勝率どおりなら、100円の単勝がいくら戻るかの倍率です。色が付くのは<b>期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満</b>の馬。発走15分前に仮の色（<span class="k g2">淡い金</span>）を付け、10分前に確かめて残った馬が<span class="k g">金</span>になります。',
+    `<li>金色は「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。金の馬でも、外れることは多くあります。</li><li>発走15分前までの淡い金は、いまのオッズでの見込みです。発売前は「想定」のオッズなので目安。</li><li>勝率は発走15分前に決めて、そのあとは動かしません。10分前と5分前に、それまでの一番低い単勝で期待値を出し直します。</li><li>5分前の確かめで期待値が${gTh().toFixed(2)}を割った馬は「売れた」と出し、淡い金に戻します。確かめで色が増えることはありません。</li>`)}
   ${H(3,'coin','買い方','予算と配分を選ぶと、期待値0.90以上の馬の単勝に100円単位で配った表が出ます。該当する馬がいないレースは「見送り」。',
     `<li>「勝率に比例」は勝ちやすい馬に多く、「均等」は同じ額ずつ。予算と配分はこの端末に残ります。</li><li>「的中時」はその馬が勝ったときに戻る額（いまのオッズ）。オッズを更新すると配分も出し直します。</li><li>買い目は材料です。買うかどうか、いくら買うかはご自身で決めてください。</li>`)}
   ${H(4,'flag','レースのラベル','色の付いた馬の勝率を足して、<b>本線</b>（100レース中25勝分以上）・<b>相手</b>（10勝分以上）・<b>穴</b>（それ未満）の3つに分けています。',
