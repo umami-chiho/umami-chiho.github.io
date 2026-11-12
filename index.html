@@ -485,6 +485,7 @@ html[data-theme=dark] #rsel .rs-r button .ck svg{stroke:#6d6f75}html[data-theme=
 #s-race .zt th.l,#s-race .zt td.l{text-align:left}
 #s-race .zt td.nm{font-weight:700;white-space:nowrap;line-height:1.15;max-width:none;width:auto;overflow:visible;padding-left:6px}
 #s-race .zt td.nm small{display:block;margin:1px 0 0;color:var(--mute);font-family:inherit;font-size:9.5px;font-weight:500}
+#s-race .zt td.evc small{display:block;margin:1px 0 0;color:var(--mute);font-size:9px;font-weight:500;letter-spacing:0}
 #s-race .zt td.mono{font-family:'DM Mono','M PLUS Rounded 1c','Zen Maru Gothic',sans-serif;font-size:12.5px;color:var(--ink)}
 #s-race .zt tr.e1 td{background:#fff}#s-race .zt tr.e1 td.evc,#s-race .zt tr.e1 td.kev{font-weight:700;color:#b39a52}
 #s-race .zt tr.e2 td{background:#f5e19e}#s-race .zt tr.e2 td.evc,#s-race .zt tr.e2 td.kev{font-weight:700;color:#5a4000}
@@ -1192,7 +1193,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261113"];             
-const BUILT='2026-11-13T0041';
+const BUILT='2026-11-13T0043';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1435,14 +1436,15 @@ function evSec(r,n,LK,fin){ let body='';
     if(!hs.length) body='<div class="alc-none">このレースの勝率は出ていません。</div>';
     else{ const pc=h=>pct(PX(h))+'%'; const pt=ptBox(`${HP?'見立ての1番手':'うまみの1番手'} ${ptU(hs[0],pc(hs[0]))}`, ptJ(hs.slice(1,3).map((h,i)=>ptU(h,pc(h),`${i+2}番手`))));
       const L=HP?null:raceLabel(r); const all=(r.runners||[]).slice().sort((a,b)=>((PX(b)||0)-(PX(a)||0))||a.uno-b.uno); const tier=v=>{ if(v==null||!isFinite(v)) return ''; const x=Math.round(v*100)/100; return x>=1?'e2':(x>=0.9?'e1':''); };
-      const rows=all.map(h=>`<tr class="${h.scr?'scr':(HP?tier(EX(h)):colCls(r,h))}"><td class="l">${fin?rkCap(r,h):cap(h)}</td><td class="l nm">${esc(h.name)}<small>${h.scr?'取消':[h.run||'',HP?'':gTag(r,h)].filter(Boolean).join('・')}</small></td><td class="mono">${h.scr?'':pct(PX(h))+'%'}</td><td class="mono">${h.odds?h.odds.toFixed(1):'—'}</td><td class="mono evc">${h.scr?'取消':(EX(h)!=null?EX(h).toFixed(2):'—')}</td></tr>`).join('');
+      const rows=all.map(h=>`<tr class="${h.scr?'scr':(HP?tier(EX(h)):colCls(r,h))}"><td class="l">${fin?rkCap(r,h):cap(h)}</td><td class="l nm">${esc(h.name)}<small>${h.scr?'取消':[h.run||'',HP?'':gTag(r,h)].filter(Boolean).join('・')}</small></td><td class="mono">${h.scr?'':pct(PX(h))+'%'}</td><td class="mono">${h.odds?h.odds.toFixed(1):'—'}</td><td class="mono evc">${h.scr?'取消':(EX(h)!=null?EX(h).toFixed(2):'—')}${(!HP&&!h.scr&&GST(r)&&h.om>0)?`<small>${(+h.om).toFixed(1)}倍で</small>`:''}</td></tr>`).join('');
       body=pt+oddsBtn(r)+labelBar(L)+fxLine(r)
         +`<h3>全頭${HP?'<small>勝率は買い方で入れた自分の見立て</small>':''}</h3><div class="tw"><table class="zt"><thead><tr><th class="l">番</th><th class="l">馬名</th><th>勝率</th><th>単勝</th><th>期待値</th></tr></thead><tbody>${rows}</tbody></table></div>`
-        +`<div class="note">${hasO?(r.odds_status==='yoso'?'オッズは発売前の想定。':'オッズは'+esc(r.odds_at||'')+'時点。'):'単勝オッズは未発売のため期待値は空欄。'}${HP?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99（自分の見立ての勝率×いまのオッズ）。':LEG(r)?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99。<br>勝率を決めたあとにオッズが1.5倍以上に上がった馬は、期待値が高くても色を付けません。':'<br>金＝発走10分前に確定した馬<br>淡い金＝まだ仮の馬／確定のあとに売れた馬<br>色が付く馬＝15分前に期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満<br>勝率＝発走15分前に固定<br>期待値＝勝率×判定の単勝（一番低い値）<br>金色は「買えばプラス」の意味ではありません<br>成績は記録にそのまま載せています'}</div>`
+        +`<div class="note">${hasO?(r.odds_status==='yoso'?'オッズは発売前の想定。':'オッズは'+esc(r.odds_at||'')+'時点。'):'単勝オッズは未発売のため期待値は空欄。'}${HP?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99（自分の見立ての勝率×いまのオッズ）。':LEG(r)?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99。<br>勝率を決めたあとにオッズが1.5倍以上に上がった馬は、期待値が高くても色を付けません。':'<br>金＝発走10分前に確定した馬<br>淡い金＝まだ仮の馬／確定のあとに売れた馬<br>色が付く馬＝15分前に期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満<br>勝率＝発走15分前に固定<br>期待値＝勝率×判定の単勝（下の小さい数字）<br>金色は「買えばプラス」の意味ではありません<br>成績は記録にそのまま載せています'}</div>`
         +alertBlock(r); } }
   return `<div class="sec" id="sec-win">${sh(n,'chart','勝率・期待値',lkTag(1)+(LK?'会員':''))}${body}</div>`; }
-function alertBlock(r){ const A=(r.runners||[]).filter(h=>!h.scr&&h.alert>=1).sort((a,b)=>(b.alert-a.alert)||(a.odds-b.odds));
-  const body=A.length?`<div class="alc">${A.map(h=>`<div class="a"><div class="ah">${cap(h)}<b>${esc(h.name)}</b><span class="al">${h.alert>=2?'人気の割に':'やや'}</span><span class="od">単勝 ${h.odds!=null?h.odds.toFixed(1):'—'}${h.pop?'・'+h.pop+'人気':''}</span></div><div class="ap">人気 ${pct(h.mkt)}% → うまみ <em>${pct(h.p)}%</em><small>${esc(h.jockey||'')}／${esc(h.trainer||'')}</small></div>${favRows(h).replace('<h4>人気馬だったときの実績</h4>','')}</div>`).join('')}</div>`:'<div class="alc-none">今回は該当なし。</div>';
+function alertBlock(r){ const SO=(r.runners||[]).filter(x=>!x.scr&&x.odds>0).reduce((a,x)=>a+1/x.odds,0), MK=h=>(h.odds>0&&SO>0)?(1/h.odds)/SO:null;    
+  const A=(r.runners||[]).filter(h=>!h.scr&&h.alert>=1).sort((a,b)=>(b.alert-a.alert)||(a.odds-b.odds));
+  const body=A.length?`<div class="alc">${A.map(h=>`<div class="a"><div class="ah">${cap(h)}<b>${esc(h.name)}</b><span class="al">${h.alert>=2?'人気の割に':'やや'}</span><span class="od">単勝 ${h.odds!=null?h.odds.toFixed(1):'—'}${h.pop?'・'+h.pop+'人気':''}</span></div><div class="ap">人気 ${pct(MK(h))}% → うまみ <em>${pct(h.p)}%</em><small>${esc(h.jockey||'')}／${esc(h.trainer||'')}</small></div>${favRows(h).replace('<h4>人気馬だったときの実績</h4>','')}</div>`).join('')}</div>`:'<div class="alc-none">今回は該当なし。</div>';
   return `<h3>人気裏切りアラート<small>単勝5倍以下の人気馬のうち、うまみの勝率が人気を下回るか、騎手・厩舎・その組み合わせが人気馬だったときに見込みより来ていない馬。「100回中 見込み24→実際15」は、同じ人気の馬が普通どれだけ勝つかとの比べ。</small></h3>${body}`; }
  
 const TKK=()=>'sunao_tk_'+DAY, TYPES=['単勝','複勝','馬連','ワイド','馬単','3連複','3連単'];
@@ -1608,19 +1610,19 @@ function renderMem(){ const el=$('#s-mem');
   if(!GATED){ el.innerHTML=`<h2>${ico('user')}会員</h2><div class="box"><b>週の合い言葉は準備中</b><p>いまは全部のレースをそのまま見られます。</p></div>`; return; }
   const od=Object.keys(OPEN).filter(d=>DAYS.includes(d)).sort();
   el.innerHTML=`<h2>${ico('user')}会員</h2>
-    <div class="box"><b>週の合い言葉</b><p>1週間（土曜〜金曜）同じ合い言葉で、その週の全レースの勝率と期待値が開きます。終わった日は誰でも見られます。</p>${lockBox(DAY,'合い言葉を入れる')}</div>
+    <div class="box"><b>週の合い言葉</b><p>1週間（土曜〜金曜）同じ合い言葉で、その週の全レースの勝率と期待値が開きます。</p>${lockBox(DAY,'合い言葉を入れる')}</div>
     <div class="box"><b>この端末で開いている日</b>${od.length?`<div class="mem-open">${od.map(d=>`<span>${dayLab(d)}</span>`).join('')}</div>`:'<p>まだありません。</p>'}</div>
     ${NOTE_URL?`<div class="box"><b>週の合い言葉を買う</b><p>noteの記事から、その週の合い言葉を手に入れられます。</p><div class="lock" style="border:none;padding:0;margin-top:6px"><div class="buy"><a href="${esc(NOTE_URL)}" target="_blank" rel="noopener">記事一覧</a></div></div></div>`:`<div class="box"><b>週の合い言葉は準備中</b><p>買える場所が決まり次第ここに出します。</p></div>`}`; }
 function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div><i class="num"><svg class="ic"><use href="#i-${icon}"/></svg><em>${n}</em></i><b>${title}</b></div><div class="pt-box">${point}</div>${more?`<details><summary>くわしく</summary><ul>${more}</ul></details>`:''}</div>`;
   $('#s-howto').innerHTML=`<h2>${ico('book')}使い方</h2><div class="hto">
   <div class="lead">うまみは、地方競馬の全レースに「正直な勝率」と「期待値」を付けるサービスです。</div>
   <div class="qs"><div><b>1</b><span>目次でレースを押す。色の丸はレースのラベル（<em>本線・相手・穴</em>）、小さな数字は人気裏切りアラートの数です。</span></div><div><b>2</b><span>「勝率と期待値」で色を見る。<em>金</em>は発走10分前に確定した馬、淡い金はまだ仮の馬です。</span></div><div><b>3</b><span>気になる馬を出馬表で押すと、近5走と騎手・調教師のこれまでが開きます。</span></div></div>
-  ${H(1,'horse','勝率はどう決めている？','うまみのAIが、過去の地方の全レースから学んだ勝率です。うまみが「50%」と出した馬は、100頭いれば50頭ほど勝つ見込みです。',
-    `<li>人気（オッズから見た勝ちやすさ）とは少し違います。うまみの勝率が人気より高い馬は「人気のわりに来る」、低い馬は「人気のわりに来ない」と見ている馬です。</li><li>出した勝率が本当にその通りだったかは、<b>記録</b>のタブで帯ごとに公開しています。</li>`)}
+  ${H(1,'horse','勝率はどう決めている？','うまみのAIの予想に、その時のオッズ（人気）を合わせて出した勝率です。発走15分前に決めて、そのあとは動かしません。うまみが「50%」と出した馬は、100頭いれば50頭ほど勝つ見込みです。',
+    `<li>人気（オッズから見た勝ちやすさ）とは少し違います。うまみの勝率が人気より高い馬は「人気のわりに来る」、低い馬は「人気のわりに来ない」と見ている馬です。</li><li>発走15分前までは、オッズが動くたびに勝率も少し動きます。</li><li>出した勝率が本当にその通りだったかは、<b>記録</b>のタブで帯ごとに公開しています。</li>`)}
   ${H(2,'coin','期待値と金色','<b>期待値＝勝率×単勝オッズ</b>。勝率どおりなら、100円の単勝がいくら戻るかの倍率です。色が付くのは<b>期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満</b>の馬。発走15分前に仮の色（<span class="k g2">淡い金</span>）を付け、10分前に確かめて残った馬が<span class="k g">金</span>になります。',
     `<li>金色は「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。金の馬でも、外れることは多くあります。</li><li>発走15分前までの淡い金は、いまのオッズでの見込みです。発売前は「想定」のオッズなので目安。</li><li>勝率は発走15分前に決めて、そのあとは動かしません。10分前と5分前に、それまでの一番低い単勝で期待値を出し直します。</li><li>5分前の確かめで期待値が${gTh().toFixed(2)}を割った馬は「売れた」と出し、淡い金に戻します。確かめで色が増えることはありません。</li>`)}
-  ${H(3,'coin','買い方','予算と配分を選ぶと、期待値0.90以上の馬の単勝に100円単位で配った表が出ます。該当する馬がいないレースは「見送り」。',
-    `<li>「勝率に比例」は勝ちやすい馬に多く、「均等」は同じ額ずつ。予算と配分はこの端末に残ります。</li><li>「的中時」はその馬が勝ったときに戻る額（いまのオッズ）。オッズを更新すると配分も出し直します。</li><li>買い目は材料です。買うかどうか、いくら買うかはご自身で決めてください。</li>`)}
+  ${H(3,'coin','買い方','券種と馬を選んで、買い目リストへ。予算を入れると金額を割り振ります。',
+    `<li><b>勝率の見立て</b>: うまみの勝率を自分の考えで直せます。<b>100%にならす</b>で合計を100%に、<b>期待値に反映</b>で「勝率・期待値」の表にも使います。</li><li><b>買い目を組む</b>: 券種と馬を選んで<b>買い目リストに載せる</b>。</li><li><b>買い目リスト</b>: 予算と配分（的中率に比例／払い戻しを揃える）を選ぶと金額が出ます。自動で入るのは単勝オッズだけで、ほかの券種はオッズを手で入れます。</li><li>この章の期待値は、いまのオッズで計算します（色の判定に使う期待値とは別です）。</li><li>買い目は材料です。買うかどうか、いくら買うかはご自身で決めてください。</li>`)}
   ${H(4,'flag','レースのラベル','色の付いた馬の勝率を足して、<b>本線</b>（100レース中25勝分以上）・<b>相手</b>（10勝分以上）・<b>穴</b>（それ未満）の3つに分けています。',
     `<li>本線は「色の付いた馬が勝ちやすいレース」。穴は「色の付いた馬はいるが勝率は低い」ので、当たれば大きい代わりに外れやすいレースです。</li><li>発走15分前までは、見込みの色で出します。</li><li>目次の色の丸と、レースページの「勝率と期待値」の札に出ます。</li>`)}
   ${H(5,'alert','人気裏切りアラート','単勝5倍以下の人気馬で、<b>うまみの勝率が人気を下回る</b>か、<b>騎手・厩舎・その組み合わせ</b>が人気馬だったときに見込みより来ていない馬に札が付きます。',
@@ -1629,7 +1631,7 @@ function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div
     `<li>脚質は近5走で最初のコーナーをどの位置で回ったかから。逃げ・先行が多いレースは前が苦しくなりやすい、といった見方に。</li><li>乗替↑は前の騎手より勝率の高い騎手に替わった馬、乗替↓はその逆。速さ1位は近5走のいちばん速い走りがレースで1位の馬。</li><li>馬を押すと近5走の表が開き、速さ（大きいほど速い）、上りの順位（1〜3位は札）、通過順も見られます。</li>`)}
   ${H(7,'clock','オッズを更新','「オッズを更新」を押すと、その時点の単勝オッズを取り直します。色を決める前（発走15分前まで）は、期待値と見込みの色も出し直します。決めたあとは、勝率・期待値・色は動きません。押したあと20秒は押せません。',
     `<li>何もしなくても、新しい値が出るたびに入れ替わります（1分ごとに確かめます）。ページの上に更新した時刻が出ます。</li><li>取消になった馬は薄く表示し、残りの馬で勝率を配り直します。</li>`)}
-  ${H(8,'key','合い言葉（週ごと）','勝率・期待値・人気裏切りアラートは、<b>週ごと（土曜〜金曜）の合い言葉</b>で開きます。一度入れればこの端末では開いたまま。終わった日は誰でも見られます。',
+  ${H(8,'key','合い言葉（週ごと）','勝率・期待値・人気裏切りアラート・買い方は、<b>週ごと（土曜〜金曜）の合い言葉</b>で開きます。一度入れればこの端末では開いたまま。',
     `<li>出馬表・オッズ・近5走・結果・記録は、合い言葉なしで見られます。</li><li>合い言葉は「会員」のタブか、レースページの箱に入れます。</li>`)}
   ${H(9,'chart','記録','うまみの勝率と、金の馬の成績を公開。結果が出るたびに更新。',
     `<li>勝率の帯ごとに、出した勝率の平均と実際に勝った割合をくらべた表</li><li><span class="k g">金</span>だった馬の<b>単勝回収率・複勝回収率・3着内率</b>。直近の開催日の成績、今の決め方になってからの成績、通算、日ごと（月のタブ）</li><li>金は、発走10分前に確定した色で数えます。払戻は確定。判定の時刻のオッズや結果が取れなかったレースは数えず、その数も出しています</li>`)}
