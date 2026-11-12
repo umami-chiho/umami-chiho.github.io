@@ -1193,7 +1193,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261113"];             
-const BUILT='2026-11-13T0241';
+const BUILT='2026-11-13T0243';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1648,10 +1648,12 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
+  const TPLV='0c7674a330';    
+  const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
     try{ let need=Date.now()-LASTP>=295000;
-      if(!need){ try{ const s=await fetch(`data/stamp.json?t=${Date.now()}`,{cache:'no-store'}); if(s.ok){ const b=(await s.json())[DAY]; need=!!b&&b!==DATA.built; } }catch(e){} }
+      if(!need){ try{ const s=await fetch(`data/stamp.json?t=${Date.now()}`,{cache:'no-store'}); if(s.ok){ const sj=await s.json(); if(vReload(sj._v)) return; const b=sj[DAY]; need=!!b&&b!==DATA.built; } }catch(e){} }
       if(need){ LASTP=Date.now(); await pull(); } }
     finally{ BUSY=false; } };
   setInterval(tick,60000); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) tick(); });
