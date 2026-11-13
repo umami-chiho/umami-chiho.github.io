@@ -1192,7 +1192,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261113"];             
-const BUILT='2026-11-13T1146';
+const BUILT='2026-11-13T1148';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1575,19 +1575,19 @@ function evDayParts(E){
     <div class="note">${td.d===today?'結果が出たレースから順に入ります。':''}レース数は「集計したレース／結果の出たレース」。</div>`:'';
   const months=[...new Set(D.map(x=>String(x.d).slice(0,6)))].sort(); if(!months.includes(EVM)) EVM=months[months.length-1];
   const rows=D.filter(x=>String(x.d).slice(0,6)===EVM).slice().reverse();
-  const rowsHtml=rows.map(x=>`<tr><td>${md(x.d)}${(E.rule2&&x.v!==2)?'＊':''}</td><td>${x.counted}/${x.done}</td><td>${x.gold.n||0}</td><td>${x.gold.wins||0}</td><td${x.gold.n?hi(x.gold.win_ret):''}>${x.gold.n?pct(x.gold.win_ret):'—'}</td><td${x.gold.n?hi(x.gold.plc_ret):''}>${x.gold.n?pct(x.gold.plc_ret):'—'}</td></tr>`).join('');
+  const rowsHtml=rows.map(x=>`<tr><td>${md(x.d)}</td><td>${x.counted}/${x.done}</td><td>${x.gold.n||0}</td><td>${x.gold.wins||0}</td><td${x.gold.n?hi(x.gold.win_ret):''}>${x.gold.n?pct(x.gold.win_ret):'—'}</td><td${x.gold.n?hi(x.gold.plc_ret):''}>${x.gold.n?pct(x.gold.plc_ret):'—'}</td></tr>`).join('');
   return {card, rowsHtml, months, tile, rates, pct}; }
 function evBlk(E,md){  
   if(!E||!E.races_counted) return `<div class="rc" style="margin-top:14px"><div class="sub">${EV_G}だった馬の成績</div><div class="empty">まだ記録がありません</div></div>`;
   const P=evDayParts(E); const g=E.gold||{}; const tile=P.tile, rates=P.rates, pct=P.pct;
   const tabs=P.months.length?`<div class="mtab">${P.months.slice().reverse().map(m=>`<button type="button" class="${m===EVM?'on':''}" onclick="EVM='${m}';renderRecord(true)">${+m.slice(4)}月</button>`).join('')}</div>`:'';
   const ng=(E.nw&&E.nw.gold)||{}; const nwBlk=E.rule2?`<div class="sub" style="margin-top:${P.card?'18px':'0'}">今の決め方になってから（${md(E.rule2)}〜）</div>`+(E.nw&&E.nw.races_counted?`<div class="stat">${tile('DAYS',{n:E.nw.days})}${tile('RACES',{n:E.nw.races_counted})}${tile('HORSES',ng)}${tile('WINS',{n:ng.wins||0})}</div>${rates(ng)}`:`<div class="note">まだ記録がありません。${md(E.rule2)}のレースが終わると入ります。</div>`):'';
-  return `<div class="rc" style="margin-top:14px"><div id="evday">${P.card}</div>${nwBlk}<div class="sub" style="margin-top:${(P.card||nwBlk)?'18px':'0'}">通算（${md(E.start)}〜${md(E.end)}・全期間）</div>
+  return `<div class="rc" style="margin-top:14px"><div id="evday">${P.card}</div>${nwBlk}<div class="sub" style="margin-top:${(P.card||nwBlk)?'18px':'0'}">通算（全期間）</div>
     <div class="stat">${tile('DAYS',{n:E.days})}${tile('RACES',{n:E.races_counted})}${tile('HORSES',g)}${tile('WINS',{n:g.wins||0})}</div>${rates(g)}
     <div class="note">${g.n?`金の${g.n}頭を100円ずつ買うと、単勝は${pct(g.win_ret)}、複勝は${pct(g.plc_ret)}戻った計算です。`:''}単勝は大きい配当に寄るので、日ごとの差が大きくなります。</div>
     <div class="sub" style="margin-top:18px">日ごと（${EVM?EVM.slice(0,4)+'年'+(+EVM.slice(4))+'月':''}）</div>${tabs}
     <table class="t"><thead><tr><th>日付</th><th>レース</th><th>金の頭数</th><th>勝ち</th><th>単勝回収率</th><th>複勝回収率</th></tr></thead><tbody id="evrows">${P.rowsHtml}</tbody></table>
-    <div class="note">${E.rule2?`${md(E.rule2)}から、色は発走15分前に仮に決め、10分前に確かめて確定しています（期待値${(+((E.line||{}).th||1)).toFixed(2)}以上・単勝${(E.line||{}).cap||10}倍未満）。記録は、10分前に確定した金で数えます。＊の日は前の決め方（発走1分前までに取った最後の勝率とオッズで、期待値1.0以上を金）です。`:'金は、発走1分前までに取った最後の勝率とオッズで、期待値（勝率×単勝オッズ）が1.0以上だった馬。'}払戻は確定の払戻（100円あたり）です。レース欄は「集計したレース／結果の出たレース」。判定の時刻のオッズや結果が取れなかったレースは数えません（確定オッズでは判定しません）。</div></div>`; }
+    <div class="note">払戻は確定の払戻（100円あたり）です。</div></div>`; }
 async function renderRecord(useCache){ const el=$('#s-record'); if(!el) return;
   if(!useCache||!RECJ){ try{ const r=await fetch(`data/record.json?v=${BUILT}`,{cache:'no-store'}); RECJ=r.ok?await r.json():null; }catch(e){ RECJ=null; } }
   const {E,C:X}=evShape(RECJ); const md=evMd;
@@ -1647,7 +1647,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='f7d745a624';    
+  const TPLV='be4bfefefa';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
