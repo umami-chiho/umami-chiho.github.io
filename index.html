@@ -1192,7 +1192,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261113"];             
-const BUILT='2026-11-13T1006';
+const BUILT='2026-11-13T1008';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1600,11 +1600,11 @@ async function renderRecord(useCache){ const el=$('#s-record'); if(!el) return;
         const tabs=months.length?`<div class="mtab">${months.slice().reverse().map(m=>`<button type="button" class="${m===CALM?'on':''}" onclick="CALM='${m}';renderRecord(true)">${+m.slice(4)}月</button>`).join('')}</div>`:'';
         const rows=(X.daily||[]).filter(d=>String(d.d).slice(0,6)===CALM).slice().reverse();
         return `<div class="sub" style="margin-top:14px">日ごと（${CALM?CALM.slice(0,4)+'年'+(+CALM.slice(4))+'月':''}）</div>${tabs}<table class="t"><thead><tr><th>日付</th><th>レース</th><th>頭数</th><th>出した勝率の合計</th><th>勝った馬</th></tr></thead><tbody>${rows.map(d=>`<tr><td>${md(d.d)}</td><td>${d.races}</td><td>${d.horses}</td><td>${d.calc.toFixed(1)}</td><td>${d.wins}</td></tr>`).join('')}</tbody></table>`; })()}`; };
-  el.innerHTML=`<div class="hto"><h2>${ico('chart')}記録</h2><div class="lead">うまみの勝率が実際にどれだけ当たっているかと、<span class="k g">金</span>だった馬の成績を、そのまま載せています。まず勝率の実現度。勝率の帯ごとに、出した勝率の平均と、実際に勝った割合をくらべます。2つが近いほど、勝率が実際に合っています。</div>
+  el.innerHTML=`<div class="hto"><h2>${ico('chart')}記録</h2><div class="lead"><span class="k g">金</span>だった馬の成績と、うまみの勝率が実際にどれだけ当たっているかを、そのまま載せています。金色は「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。</div>
+    ${evBlk(E,md)}
+    <div class="lead" style="margin-top:22px">うまみの勝率の実現度。勝率の帯ごとに、出した勝率の平均と、実際に勝った割合をくらべます。2つが近いほど、勝率が実際に合っています。</div>
     <div class="rc">${blk(X,'うまみの勝率の帯ごと'+(X?'（'+md(X.start)+'〜'+md(X.end)+'）':''))}</div>
-    <div class="note" style="margin-top:10px">結果が出たレースだけ数えています。取消・除外の馬は除きます。勝率は、そのとき画面に出していたものです。頭数が少ない帯は、ばらつきが大きくなります。</div>
-    <div class="lead" style="margin-top:22px"><span class="k g">金</span>だった馬の成績。金色は「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。</div>
-    ${evBlk(E,md)}</div>`; }
+    <div class="note" style="margin-top:18px">結果が出たレースだけ数えています。取消・除外の馬は除きます。勝率は、そのとき画面に出していたものです。頭数が少ない帯は、ばらつきが大きくなります。</div></div>`; }
 function renderMem(){ const el=$('#s-mem');
   if(!GATED){ el.innerHTML=`<h2>${ico('user')}会員</h2><div class="box"><b>週の合い言葉は準備中</b><p>いまは全部のレースをそのまま見られます。</p></div>`; return; }
   const od=Object.keys(OPEN).filter(d=>DAYS.includes(d)).sort();
@@ -1647,7 +1647,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='e0fe024f3d';    
+  const TPLV='f7d745a624';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
