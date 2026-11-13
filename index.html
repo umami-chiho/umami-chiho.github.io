@@ -1192,7 +1192,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261113"];             
-const BUILT='2026-11-13T2041';
+const BUILT='2026-11-13T2043';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1267,12 +1267,12 @@ function oddsBtn(r){ const left=Math.max(0,20000-(Date.now()-(OUPD[r.rid]||0)));
 function applyOdds(r,byHid,st,at){
   (r.runners||[]).forEach(h=>{ const x=byHid[String(h.hid)]||byHid[String(h.uno).padStart(2,'0')]||byHid[String(h.uno)]; if(x&&x.odds>0){ h.odds=x.odds; h.pop=x.pop; } });    
   if(st) r.odds_status=st; if(at) r.odds_at=at;
+  if(!LEG(r)&&!GST(r)) (r.runners||[]).forEach(h=>{ if(!h.scr&&h.p!=null&&h.odds>0) h.ev=+(h.p*h.odds).toFixed(2); });    
   const live=(r.runners||[]).filter(h=>!h.scr&&h.odds>0&&h.raw!=null);
   if(live.length>=2){                               
     const S=live.reduce((a,h)=>a+1/h.odds,0); let Q=0;
     live.forEach(h=>{ const m=(1/h.odds)/S; const z=h.raw+Math.log(m/(1-m)); h._q=1/(1+Math.exp(-z)); h.mkt=+m.toFixed(4); Q+=h._q; });
     live.forEach(h=>{ h.q=+(h._q/Q).toFixed(4); delete h._q; });
-    if(!GST(r)) (r.runners||[]).forEach(h=>{ if(!h.scr&&h.p!=null&&h.odds>0) h.ev=+(h.p*h.odds).toFixed(2); });    
   }
 }
 async function updOdds(r){ const b=$('#oupd'); if(!b||b.disabled) return; b.disabled=true; b.innerHTML='更新中…'; OUPD[r.rid]=Date.now(); OUPD['n_'+r.rid]='';
@@ -1647,7 +1647,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='be4bfefefa';    
+  const TPLV='172eb6a228';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
