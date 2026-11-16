@@ -1192,7 +1192,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261117"];             
-const BUILT='2026-11-17T0215';
+const BUILT='2026-11-17T0218';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1628,7 +1628,7 @@ function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div
     `<li>「100回中 見込み24→実際15（65回）」は、同じ人気の馬が普通どれだけ勝つかと比べた数です。回数が少ないうちは偶然の幅があります。</li><li>「やや」と「人気の割に」の2段。人気馬を軸にするときの、念のための確認に。</li><li>レースページの「人気裏切りアラート」の章に、該当する馬だけをまとめています。</li>`)}
   ${H(6,'run','脚質と札','出馬表の馬名の横に <span class="k rn r1">逃げ</span><span class="k rn r2">先行</span><span class="k rn r3">差し</span><span class="k rn r4">追込</span> の脚質と、休み明け・乗り替わり・距離の変更などの要素の札が付きます。',
     `<li>脚質は近5走で最初のコーナーをどの位置で回ったかから。逃げ・先行が多いレースは前が苦しくなりやすい、といった見方に。</li><li>乗替↑は前の騎手より勝率の高い騎手に替わった馬、乗替↓はその逆。速さ1位は近5走のいちばん速い走りがレースで1位の馬。</li><li>馬を押すと近5走の表が開き、速さ（大きいほど速い）、上りの順位（1〜3位は札）、通過順も見られます。</li>`)}
-  ${H(7,'clock','オッズを更新','「オッズを更新」を押すと、その時点の単勝オッズを取り直します。色を決める前（発走15分前まで）は、期待値と見込みの色も出し直します。決めたあとは、勝率・期待値・色は動きません。押したあと20秒は押せません。',
+  ${H(7,'clock','オッズを更新','「オッズを更新」を押すと、その時点の単勝オッズを取り直します。色を決める前（発走15分前まで）は、期待値と見込みの色も出し直します。決めたあとは勝率は動かず、期待値と色が変わるのは10分前と5分前の確かめのときだけです。押したあと20秒は押せません。',
     `<li>何もしなくても、新しい値が出るたびに入れ替わります（1分ごとに確かめます）。ページの上に更新した時刻が出ます。</li><li>取消になった馬は薄く表示し、残りの馬で勝率を配り直します。</li>`)}
   ${H(8,'key','合い言葉（週ごと）','勝率・期待値・人気裏切りアラート・買い方は、<b>週ごと（土曜〜金曜）の合い言葉</b>で開きます。一度入れればこの端末では開いたまま。',
     `<li>出馬表・オッズ・近5走・結果・記録は、合い言葉なしで見られます。</li><li>合い言葉は「会員」のタブか、レースページの箱に入れます。</li>`)}
@@ -1647,7 +1647,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='172eb6a228';    
+  const TPLV='27a95cfcc7';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
