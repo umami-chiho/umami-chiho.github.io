@@ -1194,7 +1194,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261123"];             
-const BUILT='2026-11-23T0121';
+const BUILT='2026-11-23T0123';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1446,7 +1446,7 @@ function gkBoxL(r){
   const cell=(p,o,t)=>(p>0&&o>0)?`<span class="gkc mono ${t}">${(p*o).toFixed(2)}</span>`:'<span class="gkc x">—</span>';
   const t10=x=>(x.h.c===2||x.h.c===4)?'e2':'x', t5=x=>x.h.c===2?'e2':(x.h.c===4?'e1':'x');
   const stx=st===15?`候補${rows.length}頭　モニタリング中`:(nG?`確定　金${nG}頭${nS?`（うち売れた${nS}）`:''}`:'確定　金なし');
-  const lamp=st===15?'gkd on':((st===10&&!gone)?(nG?'gkd on':'gkd off'):(nG?'gkd':'gkd off'));
+  const lamp=st===15?'gkd on':(nG?'gkd':'gkd off');    
   const body=rows.map(x=>`<tr class="${x.h.c===3?'gkx':''}"><td class="l">${cap(x.h)}</td><td class="l nm">${esc(x.h.name)}</td><td>${cell(x.h.p,x.h.pfo,'e2')}</td><td>${cell(x.h.p,x.o10,t10(x))}</td><td>${cell(x.h.p,x.o5,t5(x))}</td></tr>`).join('');
   return `<div class="ptb gkb">${head(lamp,stx)}<table class="gkt"><thead><tr><th class="l">番</th><th class="l">馬名</th><th>15分前</th><th>10分前</th><th>5分前</th></tr></thead><tbody>${body}</tbody></table><div class="gkm">数字は期待値（決めた勝率×その回までの一番低い単勝）</div>${how}</div>`; }
 function evSec(r,n,LK,fin){ let body='';
@@ -1668,7 +1668,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='9029751c3c';    
+  const TPLV='9cc727bf63';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
