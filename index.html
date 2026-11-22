@@ -1194,7 +1194,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261123"];             
-const BUILT='2026-11-23T0126';
+const BUILT='2026-11-23T0128';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1300,8 +1300,8 @@ const LEG=r=>!(r&&r.g);
 const GXo=h=>!!(h&&h.pfo>0&&h.odds>0&&h.odds>=1.5*h.pfo);
 const colOf=(r,h)=>{ if(!h||h.scr) return 0; if(LEG(r)) return (h.ev==null||GXo(h))?0:(h.ev>=1.0?2:(h.ev>=0.9?9:0)); if(GST(r)) return h.c||0; return (!lxFin(r)&&h.ev!=null&&h.ev>=gTh()&&h.odds>0&&h.odds<gCap())?9:0; };
 const colOn=c=>c===1||c===2||c===9;
-const colCls=(r,h)=>{ const c=colOf(r,h); return c===2?'e2':((c===1||c===9||c===4)?'e1':''); };
-const gTag=(r,h)=>{ const c=colOf(r,h); return c===4?'売れた':(c===3?'仮→色なし':''); };
+const colCls=(r,h)=>{ const c=colOf(r,h); return (c===2||c===4)?'e2':((c===1||c===9)?'e1':''); };    
+const gTag=(r,h)=>{ const c=colOf(r,h); return c===3?'仮→色なし':''; };
 const wasGold=(r,h)=>{ const c=colOf(r,h); return c===2||c===4; };    
 function hasGold(r){ return (r.runners||[]).some(h=>colOn(colOf(r,h))); }
  
@@ -1425,8 +1425,8 @@ function rkCap(r,h){ const o=((r.result||{}).order||[]); const i=o.findIndex(x=>
  
 function fxLine(r){ const CK='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>';
   const g=r.g||{}, st=GST(r), fin=lxFin(r);
-  const t=LEG(r)?'勝率は決めた時刻の値のままです。期待値は勝率×単勝オッズです。':st===5?`${esc(g.t10||'')} 色を確定・${esc(g.t5||'')} 確かめ済み。`
-    :st===10?(fin?`${esc(g.t10||'')} 色を確定。`:`${esc(g.t10||'')} 色を確定。5分前にもう一度確かめます。`)
+  const t=LEG(r)?'勝率は決めた時刻の値のままです。期待値は勝率×単勝オッズです。':st===5?`${esc(g.t10||'')} 色を確定。`
+    :st===10?`${esc(g.t10||'')} 色を確定。`
     :fin?'発走前に確かめられず、色なしです。'
     :st===15?`${esc(g.t15||'')} 仮の色（淡い金）。10分前に確かめて金にします。`
     :'色は発走15分前に決めます。いまの淡い金は見込みです。';
@@ -1435,20 +1435,20 @@ function gkBoxL(r){
   if(!r||LEG(r)||!lxOk(r)) return '';
   const st=GST(r), g=r.g||{}, X=lxDay(), pm=lxMin(r), th=gTh(), cp=gCap(), gone=lxGone(r,X);
   const f2=n=>String(Math.floor(n/60))+':'+String(n%60).padStart(2,'0'), t15=g.t15||(pm<9999?f2(pm-15):'');
-  const how=`<div class="fxl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span>${esc(t15)}（発走15分前）に勝率を決め、<br>期待値${th.toFixed(2)}以上・単勝${cp}倍未満の<br>候補を洗い出${st?'しました':'します'}。<br>10分前に${th.toFixed(2)}以上を保てば金として確定、<br>5分前にもう一度確かめます。</span></div>`;
+  const how=`<div class="fxl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span>${esc(t15)}（発走15分前）に勝率を決め、<br>期待値${th.toFixed(2)}以上・単勝${cp}倍未満の<br>候補を洗い出${st?'しました':'します'}。<br>10分前に${th.toFixed(2)}以上を保てば<br>金として確定します。</span></div>`;
   const head=(lamp,txt)=>`<div class="gkh"><i class="${lamp}"></i><b>うまみの金</b><span>${txt}</span></div>`;
   if(!st){ const late=(X.today&&pm<9999)?X.hm-(pm-15):-1, none=gone||(X.today&&pm<9999&&X.hm>=pm-5);
     return `<div class="ptb gkb">${head(none?'gkd off':'gkd off on',none?'金なし':(late>=2?'判定待ち':(late>=0?'判定中':'15分前に洗い出し')))}${how}</div>`; }
-  const rows=(r.runners||[]).filter(h=>!h.scr&&h.c>=1&&h.c<=4&&h.p>0&&h.pfo>0).map(h=>({h,o10:h.o10>0?h.o10:(st===10&&h.om>0?h.om:null),o5:h.o5>0?h.o5:(st===5&&h.om>0?h.om:null)}));
+  const rows=(r.runners||[]).filter(h=>!h.scr&&h.c>=1&&h.c<=4&&h.p>0&&h.pfo>0).map(h=>({h,o10:h.o10>0?h.o10:(st===10&&h.om>0?h.om:null)}));
   rows.sort((a,b)=>b.h.p*b.h.pfo-a.h.p*a.h.pfo);
-  const nG=rows.filter(x=>x.h.c===2||x.h.c===4).length, nS=rows.filter(x=>x.h.c===4).length;
+  const nG=rows.filter(x=>x.h.c===2||x.h.c===4).length;
   if(!rows.length) return `<div class="ptb gkb">${head('gkd off',(st>=10||gone)?'確定　金なし':'15分前の候補なし')}${how}</div>`;
   const cell=(p,o,t)=>(p>0&&o>0)?`<span class="gkc mono ${t}">${(p*o).toFixed(2)}</span>`:'<span class="gkc x">—</span>';
-  const t10=x=>(x.h.c===2||x.h.c===4)?'e2':'x', t5=x=>x.h.c===2?'e2':(x.h.c===4?'e1':'x');
-  const stx=st===15?`候補${rows.length}頭　モニタリング中`:(nG?`確定　金${nG}頭${nS?`（うち売れた${nS}）`:''}`:'確定　金なし');
+  const t10=x=>(x.h.c===2||x.h.c===4)?'e2':'x';
+  const stx=st===15?`候補${rows.length}頭　モニタリング中`:(nG?`確定　金${nG}頭`:'確定　金なし');
   const lamp=st===15?'gkd on':(nG?'gkd':'gkd off');    
-  const body=rows.map(x=>`<tr class="${x.h.c===3?'gkx':''}"><td class="l">${cap(x.h)}</td><td class="l nm">${esc(x.h.name)}</td><td>${cell(x.h.p,x.h.pfo,'e2')}</td><td>${cell(x.h.p,x.o10,t10(x))}</td><td>${cell(x.h.p,x.o5,t5(x))}</td></tr>`).join('');
-  return `<div class="ptb gkb">${head(lamp,stx)}<table class="gkt"><thead><tr><th class="l">番</th><th class="l">馬名</th><th>15分前</th><th>10分前</th><th>5分前</th></tr></thead><tbody>${body}</tbody></table><div class="gkm">数字は期待値（決めた勝率×その回までの一番低い単勝）</div>${how}</div>`; }
+  const body=rows.map(x=>`<tr class="${x.h.c===3?'gkx':''}"><td class="l">${cap(x.h)}</td><td class="l nm">${esc(x.h.name)}</td><td>${cell(x.h.p,x.h.pfo,'e2')}</td><td>${cell(x.h.p,x.o10,t10(x))}</td></tr>`).join('');
+  return `<div class="ptb gkb">${head(lamp,stx)}<table class="gkt"><thead><tr><th class="l">番</th><th class="l">馬名</th><th>15分前</th><th>10分前</th></tr></thead><tbody>${body}</tbody></table><div class="gkm">数字は期待値（決めた勝率×その回までの一番低い単勝）</div>${how}</div>`; }
 function evSec(r,n,LK,fin){ let body='';
   if(LK) body=lockBox(DAY,'勝率と期待値は会員向け。');
   else{ const HP=handP(r); const PX=h=>HP?HP[(r.runners||[]).indexOf(h)]:h.p; const EX=h=>HP?((PX(h)!=null&&h.odds)?PX(h)*h.odds:null):(h.ev!=null?h.ev:((h.q!=null&&h.odds)?h.q*h.odds:null)); const hs=(r.runners||[]).filter(h=>!h.scr&&PX(h)!=null).sort((a,b)=>PX(b)-PX(a)); const hasO=(r.runners||[]).some(h=>h.odds);
@@ -1459,7 +1459,7 @@ function evSec(r,n,LK,fin){ let body='';
       const gb=HP?'':gkBoxL(r);    
       body=(gb||pt)+oddsBtn(r)+labelBar(L)+(gb?'':fxLine(r))
         +`<h3>全頭${HP?'<small>勝率は買い方で入れた自分の見立て</small>':''}</h3><div class="tw"><table class="zt"><thead><tr><th class="l">番</th><th class="l">馬名</th><th>勝率</th><th>単勝</th><th>期待値</th></tr></thead><tbody>${rows}</tbody></table></div>`
-        +`<div class="note">${hasO?(r.odds_status==='yoso'?'オッズは発売前の想定。':'オッズは'+esc(r.odds_at||'')+'時点。'):'単勝オッズは未発売のため期待値は空欄。'}${HP?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99（自分の見立ての勝率×いまのオッズ）。':LEG(r)?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99。<br>勝率を決めたあとにオッズが1.5倍以上に上がった馬は、期待値が高くても色を付けません。':'<br>金＝発走10分前に確定した馬<br>淡い金＝まだ仮の馬／確定のあとに売れた馬<br>色が付く馬＝15分前に期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満<br>勝率＝発走15分前に固定<br>期待値＝勝率×判定の単勝（下の小さい数字）<br>金色は「買えばプラス」の意味ではありません<br>成績は記録にそのまま載せています'}</div>`
+        +`<div class="note">${hasO?(r.odds_status==='yoso'?'オッズは発売前の想定。':'オッズは'+esc(r.odds_at||'')+'時点。'):'単勝オッズは未発売のため期待値は空欄。'}${HP?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99（自分の見立ての勝率×いまのオッズ）。':LEG(r)?'<br>金色＝期待値1.00以上、淡い金色＝0.90〜0.99。<br>勝率を決めたあとにオッズが1.5倍以上に上がった馬は、期待値が高くても色を付けません。':'<br>金＝発走10分前に確定した馬<br>淡い金＝まだ仮の馬<br>色が付く馬＝15分前に期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満<br>勝率＝発走15分前に固定<br>期待値＝勝率×判定の単勝（下の小さい数字）<br>金色は「買えばプラス」の意味ではありません<br>成績は記録にそのまま載せています'}</div>`
         +alertBlock(r); } }
   return `<div class="sec" id="sec-win">${sh(n,'chart','勝率・期待値',lkTag(1)+(LK?'会員':''))}${body}</div>`; }
 function alertBlock(r){ const SO=(r.runners||[]).filter(x=>!x.scr&&x.odds>0).reduce((a,x)=>a+1/x.odds,0), MK=h=>(h.odds>0&&SO>0)?(1/h.odds)/SO:null;    
@@ -1640,7 +1640,7 @@ function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div
   ${H(1,'horse','勝率はどう決めている？','うまみのAIの予想に、その時のオッズ（人気）を合わせて出した勝率です。発走15分前に決めて、そのあとは動かしません。うまみが「50%」と出した馬は、100頭いれば50頭ほど勝つ見込みです。',
     `<li>人気（オッズから見た勝ちやすさ）とは少し違います。うまみの勝率が人気より高い馬は「人気のわりに来る」、低い馬は「人気のわりに来ない」と見ている馬です。</li><li>発走15分前までは、オッズが動くたびに勝率も少し動きます。</li><li>出した勝率が本当にその通りだったかは、<b>記録</b>のタブで帯ごとに公開しています。</li>`)}
   ${H(2,'coin','期待値と金色','<b>期待値＝勝率×単勝オッズ</b>。勝率どおりなら、100円の単勝がいくら戻るかの倍率です。色が付くのは<b>期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満</b>の馬。発走15分前に仮の色（<span class="k g2">淡い金</span>）を付け、10分前に確かめて残った馬が<span class="k g">金</span>になります。',
-    `<li>金色は「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。金の馬でも、外れることは多くあります。</li><li>発走15分前までの淡い金は、いまのオッズでの見込みです。発売前は「想定」のオッズなので目安。</li><li>勝率は発走15分前に決めて、そのあとは動かしません。10分前と5分前に、それまでの一番低い単勝で期待値を出し直します。</li><li>5分前の確かめで期待値が${gTh().toFixed(2)}を割った馬は「売れた」と出し、淡い金に戻します。確かめで色が増えることはありません。</li>`)}
+    `<li>金色は「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。金の馬でも、外れることは多くあります。</li><li>発走15分前までの淡い金は、いまのオッズでの見込みです。発売前は「想定」のオッズなので目安。</li><li>勝率は発走15分前に決めて、そのあとは動かしません。10分前に、それまでの一番低い単勝で期待値を出し直します。</li><li>10分前の確かめで期待値が${gTh().toFixed(2)}を割った馬は色なしにします。確かめで色が増えることはありません。</li>`)}
   ${H(3,'coin','買い方','券種と馬を選んで、買い目リストへ。予算を入れると金額を割り振ります。',
     `<li><b>勝率の見立て</b>: うまみの勝率を自分の考えで直せます。<b>100%にならす</b>で合計を100%に、<b>期待値に反映</b>で「勝率・期待値」の表にも使います。</li><li><b>買い目を組む</b>: 券種と馬を選んで<b>買い目リストに載せる</b>。</li><li><b>買い目リスト</b>: 予算と配分（的中率に比例／払い戻しを揃える）を選ぶと金額が出ます。自動で入るのは単勝オッズだけで、ほかの券種はオッズを手で入れます。</li><li>この章の期待値は、いまのオッズで計算します（色の判定に使う期待値とは別です）。</li><li>買い目は材料です。買うかどうか、いくら買うかはご自身で決めてください。</li>`)}
   ${H(4,'flag','レースのラベル','色の付いた馬の勝率を足して、<b>本線</b>（100レース中25勝分以上）・<b>相手</b>（10勝分以上）・<b>穴</b>（それ未満）の3つに分けています。',
@@ -1649,7 +1649,7 @@ function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div
     `<li>「100回中 見込み24→実際15（65回）」は、同じ人気の馬が普通どれだけ勝つかと比べた数です。回数が少ないうちは偶然の幅があります。</li><li>「やや」と「人気の割に」の2段。人気馬を軸にするときの、念のための確認に。</li><li>レースページの「人気裏切りアラート」の章に、該当する馬だけをまとめています。</li>`)}
   ${H(6,'run','脚質と札','出馬表の馬名の横に <span class="k rn r1">逃げ</span><span class="k rn r2">先行</span><span class="k rn r3">差し</span><span class="k rn r4">追込</span> の脚質と、休み明け・乗り替わり・距離の変更などの要素の札が付きます。',
     `<li>脚質は近5走で最初のコーナーをどの位置で回ったかから。逃げ・先行が多いレースは前が苦しくなりやすい、といった見方に。</li><li>乗替↑は前の騎手より勝率の高い騎手に替わった馬、乗替↓はその逆。速さ1位は近5走のいちばん速い走りがレースで1位の馬。</li><li>馬を押すと近5走の表が開き、速さ（大きいほど速い）、上りの順位（1〜3位は札）、通過順も見られます。</li>`)}
-  ${H(7,'clock','オッズを更新','「オッズを更新」を押すと、その時点の単勝オッズを取り直します。色を決める前（発走15分前まで）は、期待値と見込みの色も出し直します。決めたあとは勝率は動かず、期待値と色が変わるのは10分前と5分前の確かめのときだけです。押したあと20秒は押せません。',
+  ${H(7,'clock','オッズを更新','「オッズを更新」を押すと、その時点の単勝オッズを取り直します。色を決める前（発走15分前まで）は、期待値と見込みの色も出し直します。決めたあとは勝率は動かず、期待値と色が変わるのは10分前の確かめのときだけです。押したあと20秒は押せません。',
     `<li>何もしなくても、新しい値が出るたびに入れ替わります（1分ごとに確かめます）。ページの上に更新した時刻が出ます。</li><li>取消になった馬は薄く表示し、残りの馬で勝率を配り直します。</li>`)}
   ${H(8,'key','合い言葉（週ごと）','勝率・期待値・人気裏切りアラート・買い方は、<b>週ごと（土曜〜金曜）の合い言葉</b>で開きます。一度入れればこの端末では開いたまま。',
     `<li>出馬表・オッズ・近5走・結果・記録は、合い言葉なしで見られます。</li><li>合い言葉は「会員」のタブか、レースページの箱に入れます。</li>`)}
@@ -1668,7 +1668,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='9cc727bf63';    
+  const TPLV='8149b76c0f';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
