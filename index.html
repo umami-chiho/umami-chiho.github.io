@@ -1220,7 +1220,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261125"];             
-const BUILT='2026-11-25T2245';
+const BUILT='2026-11-25T2248';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1586,8 +1586,8 @@ function renderRacePage(r){ const el=$('#s-race'); const X=lxDay();
   const yoso=r.odds_status==='yoso'; const fin=lxFin(r); const LK=locked(DAY);
   const nm=String(r.name||''); const head=`<div class="rh rh2"><div class="rh-n" style="font-size:${nm.length>13?18:nm.length>10?20:22}px">${esc(r.name)}</div><div class="rh-m"><span class="rh-t"><b>${esc(r.time||'')}</b>発走</span>${fin?'<span class="rh-s">確定</span>':(yoso?'<span class="rh-s yoso">発売前の想定</span>':'')}<span class="rh-sf">${esc(r.surface||'')}${r.dist||''}m${r.turn?' '+esc(r.turn):''}</span><span class="rh-hc">${(r.runners||[]).filter(h=>!h.scr).length}頭</span></div></div>`;
   const scr=(r.runners||[]).filter(h=>h.scr); const scrl=scr.length?`<div class="note scrl">取消・除外 ${scr.map(h=>`${h.uno} ${esc(h.name)}`).join('・')}</div>`:'';
-  let n=0; const secs=[tableSec(r,++n,LK,fin), evSec(r,++n,LK,fin), betSec(r,++n,LK)]; if(fin) secs.push(resSec(r,++n));
-  const steps=[['horses','うまたち',true,0],['win','勝率',!LK,1],['bet','買い方',!LK,1]]; if(fin) steps.push(['res','結果',true,0]);    
+  let n=0; const secs=[evSec(r,++n,LK,fin), tableSec(r,++n,LK,fin), betSec(r,++n,LK)];     if(fin) secs.push(resSec(r,++n));
+  const steps=[['win','勝率',!LK,1],['horses','うまたち',true,0],['bet','買い方',!LK,1]]; if(fin) steps.push(['res','結果',true,0]);    
   const stepBar=`<div class="steps"><div class="in">${steps.map(([k,l,ok,pd],i)=>`<button type="button" data-k="${k}"><i>${i+1}</i>${l}${lkTag(pd)}</button>`).join('')}</div></div>`;
   el.innerHTML=sel+head+scrl+rcdCard(r,LK)+stepBar+secs.join('');
   el.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>{ const t=document.getElementById('sec-'+b.dataset.k); if(t){ const y=t.getBoundingClientRect().top+window.scrollY-100; window.scrollTo({top:y,behavior:'smooth'}); } });
@@ -1709,7 +1709,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='f2fec22240';    
+  const TPLV='df42ab91eb';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
