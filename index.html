@@ -652,6 +652,32 @@ html[data-theme=dark] #rsel .rs-r button .ck svg{stroke:#6d6f75}html[data-theme=
 #s-record .hto{margin-top:6px}#s-record .hto .lead{margin-bottom:4px}
 #s-record .mtab{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}#s-record .mtab button{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);font-family:inherit;cursor:pointer}#s-record .mtab button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 #s-record .hi{color:#a87400;font-weight:500}
+.evg{margin-top:12px;border-top:1px solid var(--line)}
+.evg summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 2px 9px;cursor:pointer;font-size:12.5px;font-weight:700;letter-spacing:.02em}
+.evg summary::-webkit-details-marker{display:none}
+.evg summary>span{display:inline-flex;align-items:center;gap:8px}
+.evg summary>span::before{content:'';width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin-left:2px}
+.evg[open] summary>span::before{transform:rotate(45deg);margin-top:-3px}
+.evg summary em{font-style:normal;font-size:11px;font-weight:500;color:var(--mute);white-space:nowrap;letter-spacing:0}
+#s-record .evg table.evgt{width:100%;table-layout:fixed;margin-top:4px}
+#s-record .evg table.evgt td,#s-record .evg table.evgt th{padding:6px 5px;text-align:right;white-space:nowrap;overflow:hidden;font-size:12px}
+#s-record .evg table.evgt td.l,#s-record .evg table.evgt th.l{text-align:left}
+#s-record .evg table.evgt th.c3{width:40px}
+#s-record .evg table.evgt th.c4,#s-record .evg table.evgt th.c5{width:58px}
+#s-record .evg table.evgt tr.sum td{overflow:visible}
+.evg,.evg .evgt{letter-spacing:0}
+.evg .evn{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.evg .evn b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.evg .evn small{font-size:10.5px;color:var(--mute)}
+.evg .evgt td.l{white-space:nowrap}
+.evg .evh{display:flex;align-items:center;gap:4px;max-width:100%;overflow:hidden}
+.evg .evh .cap{width:18px;height:18px;font-size:10px;margin:0;flex:none}
+.evg .cap0{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 3px;box-sizing:border-box;border-radius:9px;border:1px solid var(--line);font-size:10px;flex:none}
+.evg .evgt td.mi{color:var(--mute)}
+.evg .evgt tr.sum td{font-weight:700;border-bottom:none}
+.hto .evg summary{font-size:12.5px;color:var(--ink);padding:11px 2px 9px}
+.hto .evg summary::before{content:none;display:none}
+html[data-theme=dark] .hto .evg summary{color:var(--ink)}
 #s-record .stat{background:#f0efea;border:none;border-radius:22px;box-shadow:0 1px 2px rgba(60,45,20,.04),0 6px 20px rgba(60,45,20,.06);gap:1px;overflow:hidden}#s-record .stat>div{background:#fff}
 #s-record .empty{background:#fff;border:none;border-radius:22px;box-shadow:0 1px 2px rgba(60,45,20,.04),0 6px 20px rgba(60,45,20,.06);color:#8a8a86}
 #s-record .note{letter-spacing:0;line-height:1.7}#s-record .lead{letter-spacing:0;line-height:1.8}
@@ -1194,7 +1220,7 @@ html[data-theme=dark] svg text:not([fill]):not([class]){fill:#ececea}
 </div></div>
 <script>
 const DAYS=["20261125"];             
-const BUILT='2026-11-25T2240';
+const BUILT='2026-11-25T2243';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1580,20 +1606,35 @@ function evShape(R){
   const g=x=>({n:x.n||0,wins:x.hit||0,win:x.n?100*x.hit/x.n:null,top3:x.n?100*x.plc_hit/x.n:null,win_ret:x.n?x.ret/x.n:null,plc_ret:x.n?x.plc_ret/x.n:null});
   const T=(R&&R.total)||{};
   const E={start:D.length?D[0].d:ymd(new Date()),end:D.length?D[D.length-1].d:ymd(new Date()),days:D.filter(x=>x.races_counted).length,races_done:T.races_done||0,races_counted:T.races_counted||0,
-    gold:g(T.gold||{}),pale:g(T.pale||{}),daily:D.filter(x=>x.races_done).map(x=>({d:x.d,done:x.races_done,counted:x.races_counted,gold:g(x.gold||{}),pale:g(x.pale||{}),v:x.v||1})),
+    gold:g(T.gold||{}),pale:g(T.pale||{}),daily:D.filter(x=>x.races_done).map(x=>({d:x.d,done:x.races_done,counted:x.races_counted,gold:g(x.gold||{}),pale:g(x.pale||{}),v:x.v||1,golds:x.golds||[]})),
     rule2:(R&&R.rule2)||null,line:(R&&R.line)||null,nw:(R&&R.new)?{days:R.new.days||0,races_counted:R.new.races_counted||0,gold:g(R.new.gold||{})}:null};    
   const bands=(T.bands||[]).map(b=>({lo:b.lo,hi:b.hi,n:b.n,calc:b.n?100*b.exp/b.n:0,real:b.n?100*b.act/b.n:0,wins:b.act}));
   const horses=bands.reduce((a,b)=>a+b.n,0);
   const C=horses?{start:E.start,end:E.end,days:D.filter(x=>x.bands&&x.bands.some(b=>b.n)).length,races:T.races_done||0,horses,bands,
     daily:D.filter(x=>x.bands&&x.bands.some(b=>b.n)).map(x=>({d:x.d,races:x.races_done,horses:x.bands.reduce((a,b)=>a+b.n,0),calc:x.bands.reduce((a,b)=>a+b.exp,0),wins:x.bands.reduce((a,b)=>a+b.act,0)}))}:null;
   return {E,C}; }
+let EVGO={};    
+const evDt=d=>new Date(+String(d).slice(0,4),+String(d).slice(4,6)-1,+String(d).slice(6,8));
+function evGoldAcc(td){  
+  const L=(td&&td.golds)||[]; if(!L.length) return '';
+  const fy=v=>(v>0?'+':v<0?'−':'')+Math.abs(v).toLocaleString(); let sw=0, sp=0;
+  const rows=L.slice().sort((a,b)=>String(a[9]||'').localeCompare(String(b[9]||''))||String(a[0]).localeCompare(String(b[0]))||a[3]-b[3]).map(([rid,vn,R,uno,nm,fin,wr,pr,wk])=>{ const w=(+wr||0)-100, p=(+pr||0)-100; sw+=w; sp+=p;
+    return `<tr><td class="l"><span class="evh">${wk?cap({waku:wk,uno}):`<span class="cap0">${uno}</span>`}<span class="evn"><b>${esc(nm||'')}</b><small>${esc(vn||'')}${R}R</small></span></span></td><td>${fin?fin+'着':'—'}</td><td class="${w>0?'hi':'mi'}">${fy(w)}</td><td class="${p>0?'hi':'mi'}">${fy(p)}</td></tr>`; }).join('');
+  const t=`<tr class="sum"><td class="l">合計（${L.length}頭）</td><td></td><td${sw>0?' class="hi"':''}>${fy(sw)}</td><td${sp>0?' class="hi"':''}>${fy(sp)}</td></tr>`;
+  return `<details class="evg"${EVGO[td.d]?' open':''} ontoggle="EVGO['${td.d}']=this.open"><summary><span>${td.d===ymd(new Date())?'今日':evMd(td.d)+'（'+'日月火水木金土'[evDt(td.d).getDay()]+'）'}の金 ${L.length}頭</span><em>単勝 ${fy(sw)}円・複勝 ${fy(sp)}円</em></summary>
+    <table class="t evgt"><thead><tr><th class="l">馬・レース</th><th class="c3">着</th><th class="c4">単勝</th><th class="c5">複勝</th></tr></thead><tbody>${rows}${t}</tbody></table>
+    <div class="note">100円ずつ買ったときの1頭ごとの収支（円）。払戻から100円を引いた値で、合計は上の回収率と同じ数え方です。</div></details>`; }
+function evWeekAcc(D,td){  
+  if(!td) return ''; const t=evDt(td.d), w0=new Date(t.getFullYear(),t.getMonth(),t.getDate()-((t.getDay()+1)%7));
+  const prev=(D||[]).filter(x=>x.d<td.d&&evDt(x.d)>=w0).sort((a,b)=>String(b.d).localeCompare(String(a.d)));
+  return [td].concat(prev).map(evGoldAcc).join(''); }
 function evDayParts(E){  
   const md=evMd; const pct=v=>(v==null?'—':(+v).toFixed(1)+'%'); const tile=(lab,b)=>`<div><label>${lab}</label><b>${b&&b.n?b.n:0}</b></div>`; const hi=v=>(v!=null&&+v>=100?' class="hi"':'');
   const rates=b=>`<div class="stat"><div><label>単勝回収率</label><b${b.n?hi(b.win_ret):''}>${b.n?pct(b.win_ret):'—'}</b></div><div><label>複勝回収率</label><b${b.n?hi(b.plc_ret):''}>${b.n?pct(b.plc_ret):'—'}</b></div><div><label>3着内率</label><b>${b.n?pct(b.top3):'—'}</b></div></div>`;
   const D=(E&&E.daily)||[]; const today=ymd(new Date()); const td=D.find(x=>x.d===today)||D[D.length-1]||null; const tg=(td&&td.gold)||{};
   const card=td?`<div class="sub">${td.d===today?'今日':'直近の開催日'}の${EV_G}の成績（${md(td.d)}）</div>
     <div class="stat"><div><label>RACES</label><b>${td.counted}<small style="font-size:12px;color:var(--mute)">/${td.done}</small></b></div>${tile('HORSES',tg)}${tile('WINS',{n:tg.wins||0})}</div>${rates(tg)}
-    <div class="note">${td.d===today?'結果が出たレースから順に入ります。':''}レース数は「集計したレース／結果の出たレース」。</div>`:'';
+    <div class="note">${td.d===today?'結果が出たレースから順に入ります。':''}レース数は「集計したレース／結果の出たレース」。</div>${evWeekAcc(D,td)}`:'';
   const months=[...new Set(D.map(x=>String(x.d).slice(0,6)))].sort(); if(!months.includes(EVM)) EVM=months[months.length-1];
   const rows=D.filter(x=>String(x.d).slice(0,6)===EVM).slice().reverse();
   const rowsHtml=rows.map(x=>`<tr><td>${md(x.d)}</td><td>${x.counted}/${x.done}</td><td>${x.gold.n||0}</td><td>${x.gold.wins||0}</td><td${x.gold.n?hi(x.gold.win_ret):''}>${x.gold.n?pct(x.gold.win_ret):'—'}</td><td${x.gold.n?hi(x.gold.plc_ret):''}>${x.gold.n?pct(x.gold.plc_ret):'—'}</td></tr>`).join('');
@@ -1668,7 +1709,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='8149b76c0f';    
+  const TPLV='f2fec22240';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
