@@ -666,6 +666,31 @@ html[data-theme=dark] #rsel .rs-r button .ck svg{stroke:#6d6f75}html[data-theme=
 #s-record .rec2 .defs>span{white-space:nowrap}
 #s-record .rec2 .cnt{font-size:11px;color:var(--mute);letter-spacing:.04em;margin-top:8px;text-align:right}
 #s-record .rec2 .cnt b{font-family:'DM Mono','M PLUS Rounded 1c','Zen Maru Gothic',sans-serif;font-weight:500;font-size:13px;color:var(--ink);margin:0 1px 0 8px}
+.gks.um{margin-top:12px;padding-top:12px;border-top:1px solid #e3e3df}
+.umr{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid #ececea}.umr.ax{border-top:0;padding-top:0;margin-top:9px}
+.uml{width:21px;flex:none;font-size:10px;font-weight:700;color:var(--mute);white-space:nowrap}
+.umnm{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 auto}
+.umr .cap{width:24px;height:24px;font-size:12px;margin:0;flex:none}
+.umr .dc{padding:1px 6px;font-size:11px}
+.umr.hit{background:#e1f5ee;border-top-color:transparent;border-radius:10px;padding:8px 10px 8px 0}
+.umr.miss>*{opacity:.45}
+.umh{font-style:normal;flex:none;display:inline-block;padding:0 7px;border-radius:6px;font-size:10.5px;font-weight:800;line-height:1.7;white-space:nowrap}
+.umh.hit{box-shadow:inset 0 0 0 1px #d85a30;color:#b3461f}.umh.rf{box-shadow:inset 0 0 0 1px #ba7517;color:#8a560f}
+.umy{flex:none;font-family:'DM Mono','M PLUS Rounded 1c','Zen Maru Gothic',sans-serif;font-size:14px;font-weight:500;color:#0f6e56;white-space:nowrap}
+html[data-theme=dark] .gks.um{border-top:1px solid #30333a}
+html[data-theme=dark] .umr{border-top:1px solid #353534}
+html[data-theme=dark] .umr.ax{border-top:0}
+html[data-theme=dark] .uml{color:var(--mute)}
+html[data-theme=dark] .umr.hit{background:#16221e;border-top-color:transparent}
+html[data-theme=dark] .umh.hit{box-shadow:inset 0 0 0 1px #cd826a;color:#fba589}
+html[data-theme=dark] .umh.rf{box-shadow:inset 0 0 0 1px #c28c51;color:#ebb172}
+html[data-theme=dark] .umy{color:#4fc29f}
+#s-record .rec2 .ref2{margin-top:10px;padding:10px 10px 4px;border-radius:12px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--line)}
+#s-record .rec2 .ref2 .rl{font-size:11px;color:var(--mute);letter-spacing:.02em;padding:0 2px}
+#s-record .rec2 .ref2 table.rt{background:transparent;font-size:12px;margin-top:2px;box-shadow:none;border-radius:0}
+#s-record .rec2 .ref2 table.rt th{border-bottom:1px solid var(--line);padding:5px 6px}
+#s-record .rec2 .ref2 table.rt td{border-bottom:none;padding:6px 6px;color:var(--mute);background:transparent}
+#s-record .rec2 .ref2 table.rt td.l{font-size:11px}
 .evg{margin-top:12px;border-top:1px solid var(--line)}
 .evg summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 2px 9px;cursor:pointer;font-size:12.5px;font-weight:700;letter-spacing:.02em}
 .evg summary::-webkit-details-marker{display:none}
@@ -1289,7 +1314,7 @@ html[data-theme=dark] #s-race details.rhow>summary::before{background:#9c7c50;co
 </div></div>
 <script>
 const DAYS=["20261128"];             
-const BUILT='2026-11-28T1240';
+const BUILT='2026-11-28T1245';
 const GATED=true;         
 const NOTE_URL="";       
 const $=s=>document.querySelector(s);
@@ -1533,17 +1558,32 @@ function gkBoxL(r){
   const head=(lamp,txt)=>`<div class="gkh"><i class="${lamp}"></i><b>うまみのだし</b><span>${txt}</span></div>`;
   const sec=right=>`<div class="gks"><b>単勝</b><span>10分前確定</span>${right}</div>`, st0=t=>`<em class="gkst">${t}</em>`;
   if(!st){ const late=(X.today&&pm<9999)?X.hm-(pm-15):-1, none=gone||(X.today&&pm<9999&&X.hm>=pm-5);    
-    return `<div class="ptb gkb">${head(none?'gkd off':'gkd off on',none?'確定':'')}${sec(st0(none?'一番だしなし':(late>=2?'判定待ち':(late>=0?'判定中':(pm<9999?f2(pm-15)+'に決まります':'')))))}</div>`; }
+    return `<div class="ptb gkb">${head(none?'gkd off':'gkd off on',none?'確定':'')}${sec(st0(none?'一番だしなし':(late>=2?'判定待ち':(late>=0?'判定中':(pm<9999?f2(pm-15)+'に決まります':'')))))}${umBlkL(r)}</div>`; }
   const rows=(r.runners||[]).filter(h=>!h.scr&&h.c>=1&&h.c<=4&&h.p>0&&h.pfo>0).map(h=>({h,o10:h.o10>0?h.o10:(st===10&&h.om>0?h.om:null)}));
   rows.sort((a,b)=>b.h.p*b.h.pfo-a.h.p*a.h.pfo);
   const nG=rows.filter(x=>x.h.c===2||x.h.c===4).length, done=st!==15;
-  if(!rows.length) return `<div class="ptb gkb">${head('gkd off',(done||gone)?'確定':'')}${sec(st0((done||gone)?'一番だしなし':'15分前の候補なし'))}</div>`;
+  if(!rows.length) return `<div class="ptb gkb">${head('gkd off',(done||gone)?'確定':'')}${sec(st0((done||gone)?'一番だしなし':'15分前の候補なし'))}${umBlkL(r)}</div>`;
   const cell=(p,o,t)=>(p>0&&o>0)?`<span class="gkc mono ${t}">${(p*o).toFixed(2)}</span>`:'<span class="gkc x">—</span>';
   const t10=x=>(x.h.c===2||x.h.c===4)?'e2':'x';
   const lamp=done?(nG?'gkd':'gkd off'):'gkd on';    
   const right=done?(nG?`<em class="dc d1">一番だし ${nG}頭</em>`:st0('一番だしなし')):st0(`候補${rows.length}頭`);
   const body=rows.map(x=>`<tr class="${x.h.c===3?'gkx':''}"><td class="l">${cap(x.h)}</td><td class="l nm">${esc(x.h.name)}</td><td>${cell(x.h.p,x.h.pfo,'e2')}</td><td>${cell(x.h.p,x.o10,t10(x))}</td></tr>`).join('');
-  return `<div class="ptb gkb">${head(lamp,done?'確定':'モニタリング中')}${sec(right)}<table class="gkt"><thead><tr><th colspan="2"></th><th>15分前</th><th>10分前</th></tr></thead><tbody>${body}</tbody></table></div>`; }
+  return `<div class="ptb gkb">${head(lamp,done?'確定':'モニタリング中')}${sec(right)}<table class="gkt"><thead><tr><th colspan="2"></th><th>15分前</th><th>10分前</th></tr></thead><tbody>${body}</tbody></table>${umBlkL(r)}</div>`; }
+function umBlkL(r){  
+  const pm=lxMin(r), f2=n=>String(Math.floor(n/60))+':'+String(n%60).padStart(2,'0');
+  const hd=right=>`<div class="gks um"><b>馬連</b><span>15分前確定</span>${right}</div>`, st0=t=>`<em class="gkst">${t}</em>`;
+  if(!GST(r)) return hd(st0(pm<9999?f2(pm-15)+'に決まります':''));
+  if(!(r.g&&r.g.um)) return hd(st0('判定なし'));
+  const ax=(r.runners||[]).find(h=>h.um==='a'), ps=(r.runners||[]).filter(h=>h.um===1||h.um===2).sort((a,b)=>a.um-b.um||a.uno-b.uno);
+  if(!ax||!ps.length) return hd(st0('見送り'));
+  const P=(r.result&&r.result.order&&r.result.order.length)?(payAll(r)||{}):null, um=P?(P['馬連']||[]):null;
+  const rows=ps.map(h=>{ const t=h.um, c=Math.min(+ax.uno,+h.uno)+'-'+Math.max(+ax.uno,+h.uno);
+    const nm=`<span class="uml">相手</span>${cap(h)}<span class="umnm">${esc(h.name||'')}</span>`, tag=`<em class="dc d${t}">${t===1?'一番だし':'二番だし'}</em>`;
+    if(P){ if(ax.scr||h.scr) return `<div class="umr">${nm}<em class="umh rf">返還</em></div>`;
+      const y=+((um.find(x=>x.c===c)||{}).y||0); if(y>0) return `<div class="umr hit">${nm}<em class="umh hit">的中</em><b class="umy">${y.toLocaleString()}円</b></div>`;
+      return `<div class="umr miss">${nm}${tag}</div>`; }
+    return `<div class="umr">${nm}${tag}</div>`; }).join('');
+  return hd(st0(ps.length+'組'))+`<div class="umr ax"><span class="uml">軸</span>${cap(ax)}<span class="umnm">${esc(ax.name||'')}</span></div>`+rows; }
  
 const evTierL=(v,o)=>{ if(v==null||!isFinite(v)||!(o>0)||o>=gCap()) return ''; const x=Math.round(v*100)/100; return x>=Math.round(gTh()*100)/100?'e2':(x>=1?'e1':''); };
 const ZSKL={no:{l:'番',d:1},nm:{l:'馬名',d:1},p:{l:'勝率',d:-1},o:{l:'単勝',d:1},ev:{l:'期待値',d:-1}};
@@ -1685,7 +1725,7 @@ function renderRacePage(r){ const el=$('#s-race'); const X=lxDay();
   try{ renderHeader(); }catch(e){}
 }
  
-let RECJ=null, EVM=null, CALM=null;    
+let RECJ=null, EVM=null, CALM=null, UMM=null;    
 const EV_G='<span class="k g">一番だし</span>（単勝・期待値1.10以上）';
 const evMd=d=>`${+String(d).slice(4,6)}/${+String(d).slice(6,8)}`;
 function evShape(R){  
@@ -1695,6 +1735,9 @@ function evShape(R){
   const E={start:D.length?D[0].d:ymd(new Date()),end:D.length?D[D.length-1].d:ymd(new Date()),days:D.filter(x=>x.races_counted).length,races_done:T.races_done||0,races_counted:T.races_counted||0,
     gold:g(T.gold||{}),pale:g(T.pale||{}),daily:D.filter(x=>x.races_done).map(x=>({d:x.d,done:x.races_done,counted:x.races_counted,gold:g(x.gold||{}),pale:g(x.pale||{}),v:x.v||1,golds:x.golds||[]})),
     rule2:(R&&R.rule2)||null,line:(R&&R.line)||null,nw:(R&&R.new)?{days:R.new.days||0,races_counted:R.new.races_counted||0,gold:g(R.new.gold||{})}:null};    
+  const ug=x=>({n:(x&&x.n)||0,hits:(x&&x.hit)||0,ret:(x&&x.n)?x.ret/x.n:null});    
+  const UD=D.filter(x=>x.um&&x.um.all&&x.um.all.n).map(x=>({d:x.d,t1:ug(x.um.t1),all:ug(x.um.all),pairs:x.ums||[]}));
+  E.um=(T.um&&UD.length)?{start:UD[0].d,end:UD[UD.length-1].d,days:UD.length,t1:ug(T.um.t1),all:ug(T.um.all),daily:UD}:null; E.um_start=(T.um&&T.um.start)||'20261128';
   const bands=(T.bands||[]).map(b=>({lo:b.lo,hi:b.hi,n:b.n,calc:b.n?100*b.exp/b.n:0,real:b.n?100*b.act/b.n:0,wins:b.act}));
   const horses=bands.reduce((a,b)=>a+b.n,0);
   const C=horses?{start:E.start,end:E.end,days:D.filter(x=>x.bands&&x.bands.some(b=>b.n)).length,races:T.races_done||0,horses,bands,
@@ -1720,6 +1763,32 @@ function recTan3(x){
   x=x||{}; const n=x.n||0, plc=(x.plc!=null?x.plc:Math.round(n*(x.top3||0)/100));
   return `<div class="stat">${recTile('単勝 回収率',n?recPct(x.win_ret):'—',n?recHi(x.win_ret):'')}${recTile('的中/頭数',recFrac(x.wins||0,n))}${recTile('的中率',recRate(x.wins||0,n))}</div>
     <div class="stat">${recTile('複勝 回収率',n?recPct(x.plc_ret):'—',n?recHi(x.plc_ret):'')}${recTile('的中/頭数',recFrac(plc,n))}${recTile('的中率',recRate(plc,n))}</div>`; }
+function recUm3(x){  
+  x=x||{}; const n=x.n||0; return `<div class="stat">${recTile('回収率',n?recPct(x.ret):'—',n?recHi(x.ret):'')}${recTile('的中/組',recFrac(x.hits||0,n))}${recTile('的中率',recRate(x.hits||0,n))}</div>`; }
+function umDayAcc(x){  
+  const L=((x&&x.pairs)||[]).filter(p=>+p[5]===1); if(!L.length) return '';
+  const fy=v=>(v>0?'+':v<0?'−':'')+Math.abs(v).toLocaleString(); let s=0;
+  const rows=L.slice().sort((a,b)=>String(a[8]||'').localeCompare(String(b[8]||''))||String(a[0]).localeCompare(String(b[0]))||a[4]-b[4]).map(p=>{ const w=(+p[7]||0)-100; s+=w;
+    return `<tr><td class="l"><b>${esc(p[1]||'')}${p[2]}R</b></td><td>${Math.min(+p[3],+p[4])}-${Math.max(+p[3],+p[4])}</td><td${+p[6]?' class="hi"':''}>${+p[6]?'的中':'—'}</td><td class="${w>0?'hi':'mi'}">${fy(w)}</td></tr>`; }).join('');
+  const k='um'+x.d;
+  return `<details class="evg"${EVGO[k]?' open':''} ontoggle="EVGO['${k}']=this.open"><summary><span>${x.d===ymd(new Date())?'今日':evMd(x.d)+'（'+recWd(x.d)+'）'}の一番だし ${L.length}組</span><em>${fy(s)}円</em></summary>
+    <table class="t evgt"><thead><tr><th class="l">レース</th><th>組</th><th>結果</th><th>収支</th></tr></thead><tbody>${rows}<tr class="sum"><td class="l">合計（${L.length}組）</td><td></td><td></td><td${s>0?' class="hi"':''}>${fy(s)}</td></tr></tbody></table>
+    <div class="note">100円ずつ買ったときの1組ごとの収支（円）。</div></details>`; }
+function umRecBlk(E){  
+  const U=E&&E.um;
+  if(!U||!U.all||!U.all.n) return `<div class="rc" style="margin-top:16px"><div class="empty">まだ記録がありません（${evMd((E&&E.um_start)||'20261128')}の開催から数えます）</div></div>`;
+  const D=U.daily||[], L=D[D.length-1], al=U.all||{}, an=al.n||0;
+  const months=[...new Set(D.map(x=>String(x.d).slice(0,6)))].sort(); if(!months.includes(UMM)) UMM=months[months.length-1];
+  const tabs=`<div class="mtab">${months.slice().reverse().map(m=>`<button type="button" class="${m===UMM?'on':''}" onclick="UMM='${m}';renderRecord(true)">${+m.slice(4)}月</button>`).join('')}</div>`;
+  const rows=D.filter(x=>String(x.d).slice(0,6)===UMM).slice().reverse().map(x=>{ const a=x.t1||{}, n=a.n||0; return `<tr><td>${evMd(x.d)}</td><td${n?recHi(a.ret):''}>${n?recPct(a.ret):'—'}</td><td>${a.hits||0}/${n}</td><td>${recRate(a.hits||0,n)}</td></tr>`; }).join('');
+  const t0=evDt(L.d).getTime(), acc=D.filter(x=>x.d<=L.d&&(t0-evDt(x.d).getTime())/864e5<=6).sort((a,b)=>String(b.d).localeCompare(String(a.d))).map(umDayAcc).join('');
+  return `<div class="rc" style="margin-top:16px"><div class="sub"><span class="k g">一番だし</span>の通算（${evMd(U.start)}〜${evMd(U.end)}）</div>${recUm3(U.t1)}
+    <div class="cnt">開催<b>${U.days}</b>日</div>
+    <div class="ref2"><div class="rl">参考：<span class="k g2">二番だし</span>まで買うと（一番だしを含む）</div>
+      <table class="t rt"><thead><tr><th class="l"></th><th>回収率</th><th>的中/組</th><th>的中率</th></tr></thead><tbody><tr><td class="l">馬連</td><td>${recPct(al.ret)}</td><td>${al.hits||0}/${an}</td><td>${recRate(al.hits||0,an)}</td></tr></tbody></table></div>
+    <div class="sub" style="margin-top:20px">${L.d===ymd(new Date())?'今日':'直近の開催日'}（${evMd(L.d)}・${recWd(L.d)}）</div>${recUm3(L.t1)}${acc}
+    <div class="sub" style="margin-top:20px">日ごと</div>${tabs}
+    <table class="t"><thead><tr><th>日付</th><th>回収率</th><th>的中/組</th><th>的中率</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
 function evDayParts(E){  
   const md=evMd, pct=recPct, hi=recHi;
   const D=(E&&E.daily)||[]; const today=ymd(new Date()); const td=D.find(x=>x.d===today)||D[D.length-1]||null; const tg=(td&&td.gold)||{};
@@ -1750,18 +1819,21 @@ async function renderRecord(useCache){ const el=$('#s-record'); if(!el) return;
         const tabs=months.length?`<div class="mtab">${months.slice().reverse().map(m=>`<button type="button" class="${m===CALM?'on':''}" onclick="CALM='${m}';renderRecord(true)">${+m.slice(4)}月</button>`).join('')}</div>`:'';
         const rows=(X.daily||[]).filter(d=>String(d.d).slice(0,6)===CALM).slice().reverse();
         return `<div class="sub" style="margin-top:14px">日ごと（${CALM?CALM.slice(0,4)+'年'+(+CALM.slice(4))+'月':''}）</div>${tabs}<table class="t"><thead><tr><th>日付</th><th>レース</th><th>頭数</th><th>出した勝率の合計</th><th>勝った馬</th></tr></thead><tbody>${rows.map(d=>`<tr><td>${md(d.d)}</td><td>${d.races}</td><td>${d.horses}</td><td>${d.calc.toFixed(1)}</td><td>${d.wins}</td></tr>`).join('')}</tbody></table>`; })()}`; };
-  const g=(E&&E.gold)||{}; const go=id=>`document.getElementById('${id}').scrollIntoView({behavior:'smooth',block:'start'})`;
+  const g=(E&&E.gold)||{}, U=E&&E.um, u1=(U&&U.t1)||{}; const go=id=>`document.getElementById('${id}').scrollIntoView({behavior:'smooth',block:'start'})`;
   el.innerHTML=`<div class="hto rec2"><h2>${ico('chart')}記録</h2><div class="lead">発走10分前に確定した<span class="k g">一番だし</span>を、100円ずつ買ったときの成績です。</div>
-    <div class="top"><div class="stat">${recTile('単勝',g.n?recPct(g.win_ret):'—',g.n?recHi(g.win_ret):'')}${recTile('複勝',g.n?recPct(g.plc_ret):'—',g.n?recHi(g.plc_ret):'')}</div>
-      <div class="note">一番だしの通算の回収率（${E&&E.start?md(E.start):'11/13'}〜）。</div></div>
-    <div class="toc"><button type="button" onclick="${go('rec-tan')}">単勝・複勝</button><button type="button" onclick="${go('rec-cal')}">勝率の当たり具合</button></div>
+    <div class="top"><div class="stat">${recTile('単勝',g.n?recPct(g.win_ret):'—',g.n?recHi(g.win_ret):'')}${recTile('複勝',g.n?recPct(g.plc_ret):'—',g.n?recHi(g.plc_ret):'')}${recTile('馬連',u1.n?recPct(u1.ret):'—',u1.n?recHi(u1.ret):'')}</div>
+      <div class="note">一番だしの通算の回収率（単勝・複勝は${E&&E.start?md(E.start):'11/13'}〜、馬連は${md((U&&U.start)||(E&&E.um_start)||'20261128')}〜）。</div></div>
+    <div class="toc"><button type="button" onclick="${go('rec-tan')}">単勝・複勝</button><button type="button" onclick="${go('rec-um')}">馬連</button><button type="button" onclick="${go('rec-cal')}">勝率の当たり具合</button></div>
     <div class="hs" id="rec-tan"><div>${ico('chart')}<b>単勝・複勝</b><small>期待値＝勝率×単勝オッズ</small></div></div>
     <div class="defs"><span><span class="k g">一番だし</span>期待値${gTh().toFixed(2)}以上・単勝${gCap()}倍未満</span></div>
     ${evBlk(E,md)}
+    <div class="hs" id="rec-um"><div>${ico('chart')}<b>馬連</b><small>軸1頭から相手2頭まで</small></div></div>
+    <div class="defs"><span><span class="k g">一番だし</span>軸も相手も強い組</span><span><span class="k g2">二番だし</span>条件に合う組すべて</span></div>
+    ${umRecBlk(E)}
     <div class="hs" id="rec-cal"><div>${ico('chart')}<b>勝率の当たり具合</b><small>出した勝率と実際</small></div></div>
     <div class="lead">勝率の帯ごとに、出した勝率の平均と、実際に勝った割合をくらべます。2つが近いほど、勝率が合っています。</div>
     <div class="rc">${blk(X,'うまみの勝率の帯ごと'+(X?'（'+md(X.start)+'〜'+md(X.end)+'）':''))}</div>
-    <details class="evg" style="margin-top:18px"><summary><span>数え方</span></summary><div class="note">一番だしは、発走15分前に期待値（勝率×単勝オッズ）が${gTh().toFixed(2)}以上・単勝${gCap()}倍未満だった馬のうち、10分前の確かめで残った馬です。<br>成績は100円ずつ買ったときのもので、払戻は確定の単勝・複勝（100円あたり）。的中は、単勝は1着、複勝は払戻があった馬を数えます。<br>結果が出たレースだけ数えています。判定の時刻のオッズや結果が取れなかったレースと、取消・除外の馬は数えません。<br>単勝は大きい配当に寄るので、日ごとの差が大きくなります。<br>勝率は、そのとき画面に出していたものです。頭数が少ない帯は、ばらつきが大きくなります。</div></details></div>`; }
+    <details class="evg" style="margin-top:18px"><summary><span>数え方</span></summary><div class="note">一番だしは、発走15分前に期待値（勝率×単勝オッズ）が${gTh().toFixed(2)}以上・単勝${gCap()}倍未満だった馬のうち、10分前の確かめで残った馬です。<br>成績は100円ずつ買ったときのもので、払戻は確定の単勝・複勝（100円あたり）。的中は、単勝は1着、複勝は払戻があった馬を数えます。<br>結果が出たレースだけ数えています。判定の時刻のオッズや結果が取れなかったレースと、取消・除外の馬は数えません。<br>馬連は、発走15分前に決めた組です。取消が入った馬・組は返還なので数えません。<br>単勝は大きい配当に寄るので、日ごとの差が大きくなります。<br>勝率は、そのとき画面に出していたものです。頭数が少ない帯は、ばらつきが大きくなります。</div></details></div>`; }
 function renderMem(){ const el=$('#s-mem');
   if(!GATED){ el.innerHTML=`<h2>${ico('user')}会員</h2><div class="box"><b>週の合い言葉は準備中</b><p>いまは全部のレースをそのまま見られます。</p></div>`; return; }
   const od=Object.keys(OPEN).filter(d=>DAYS.includes(d)).sort();
@@ -1776,7 +1848,7 @@ function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div
   ${H(1,'horse','勝率はどう決めている？','うまみのAIの予想に、その時のオッズ（人気）を合わせて出した勝率です。発走15分前に決めて、そのあとは動かしません。うまみが「50%」と出した馬は、100頭いれば50頭ほど勝つ見込みです。',
     `<li>人気（オッズから見た勝ちやすさ）とは少し違います。うまみの勝率が人気より高い馬は「人気のわりに来る」、低い馬は「人気のわりに来ない」と見ている馬です。</li><li>発走15分前までは、オッズが動くたびに勝率も少し動きます。</li><li>出した勝率が本当にその通りだったかは、<b>記録</b>のタブで帯ごとに公開しています。</li>`)}
   ${H(2,'coin','期待値と一番だし','<b>期待値＝勝率×単勝オッズ</b>。勝率どおりなら、100円の単勝がいくら戻るかの倍率です。一番上の「うまみのだし」には、発走15分前に<b>期待値'+gTh().toFixed(2)+'以上・単勝'+gCap()+'倍未満</b>だった馬が候補として出ます。10分前に確かめて残った馬が<span class="k g">一番だし</span>です。全頭の表の色は今の単勝での期待値で、金色＝'+gTh().toFixed(2)+'以上、薄い金色（<span class="k g2">二番だし</span>）＝1.00〜'+(gTh()-0.01).toFixed(2)+'。',
-    `<li>一番だしは「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。一番だしの馬でも、外れることは多くあります。</li><li>全頭の表の色は、いまのオッズでの期待値です。発売前は「想定」のオッズなので目安。</li><li>勝率は発走15分前に決めて、そのあとは動かしません。10分前に、それまでの一番低い単勝で期待値を出し直します。</li><li>10分前の確かめで期待値が${gTh().toFixed(2)}を割った馬は一番だしから外します。確かめで増えることはありません。</li>`)}
+    `<li>一番だしは「うまみの勝率から見て、オッズが見合う馬」の目印です。買い続ければプラスになる、という意味ではありません。一番だしの馬でも、外れることは多くあります。</li><li>全頭の表の色は、いまのオッズでの期待値です。発売前は「想定」のオッズなので目安。</li><li>勝率は発走15分前に決めて、そのあとは動かしません。10分前に、それまでの一番低い単勝で期待値を出し直します。</li><li>10分前の確かめで期待値が${gTh().toFixed(2)}を割った馬は一番だしから外します。確かめで増えることはありません。</li><li>馬連は発走15分前に組を決め、そのあと変えません（<span class="k g">一番だし</span>・<span class="k g2">二番だし</span>）。軸1頭から相手2頭まで。成績は<b>記録</b>のタブで数えます。</li>`)}
   ${H(3,'coin','買い方','券種と馬を選んで、買い目リストへ。予算を入れると金額を割り振ります。',
     `<li><b>勝率の見立て</b>: うまみの勝率を自分の考えで直せます。<b>100%にならす</b>で合計を100%に、<b>期待値に反映</b>で「勝率・期待値」の表にも使います。</li><li><b>買い目を組む</b>: 券種と馬を選んで<b>買い目リストに載せる</b>。</li><li><b>買い目リスト</b>: 予算と配分（的中率に比例／払い戻しを揃える）を選ぶと金額が出ます。自動で入るのは単勝オッズだけで、ほかの券種はオッズを手で入れます。</li><li>この章の期待値は、いまのオッズで計算します（色の判定に使う期待値とは別です）。</li><li>買い目は材料です。買うかどうか、いくら買うかはご自身で決めてください。</li>`)}
   ${H(4,'flag','レースのラベル','色の付いた馬の勝率を足して、<b>本線</b>（100レース中25勝分以上）・<b>相手</b>（10勝分以上）・<b>穴</b>（それ未満）の3つに分けています。',
@@ -1790,7 +1862,7 @@ function renderHowto(){ const H=(n,icon,title,point,more)=>`<div class="hs"><div
   ${H(8,'key','合い言葉（週ごと）','勝率・期待値・人気裏切りアラート・買い方は、<b>週ごと（土曜〜金曜）の合い言葉</b>で開きます。一度入れればこの端末では開いたまま。',
     `<li>出馬表・オッズ・近5走・結果・記録は、合い言葉なしで見られます。</li><li>合い言葉は「会員」のタブか、レースページの箱に入れます。</li>`)}
   ${H(9,'chart','記録','うまみの勝率と、一番だしの成績を公開。結果が出るたびに更新。',
-    `<li><span class="k g">一番だし</span>の馬の<b>単勝・複勝の回収率、的中数、的中率</b>。通算（11/13〜）、直近の開催日、日ごと（月のタブ）</li><li>勝率の帯ごとに、出した勝率の平均と実際に勝った割合をくらべた表</li><li>一番だしは、発走10分前に確定したもので数えます。払戻は確定。判定の時刻のオッズや結果が取れなかったレースは数えず、その数も出しています</li>`)}
+    `<li><span class="k g">一番だし</span>の馬の<b>単勝・複勝の回収率、的中数、的中率</b>。通算（11/13〜）、直近の開催日、日ごと（月のタブ）</li><li>馬連の<span class="k g">一番だし</span>の回収率・的中数・的中率（11/28〜）。<span class="k g2">二番だし</span>まで買った場合は参考として載せます</li><li>勝率の帯ごとに、出した勝率の平均と実際に勝った割合をくらべた表</li><li>一番だしは、発走10分前に確定したもので数えます。払戻は確定。判定の時刻のオッズや結果が取れなかったレースは数えず、その数も出しています</li>`)}
   ${H(10,'wind','コースと馬場','レースのページのいちばん上に、馬場状態と、直線に対する風の向きと強さを出します。')}
   ${H(11,'trophy','結果','レースが終わると、着順と払戻（100円あたり）が出ます。一番だしの馬の単勝の的中は金色で示します。')}
   ${H(12,'grid','中央と地方','いちばん上の<b>UMAMI 中央</b>と<b>UMAMI 地方</b>で切り替えます。中央競馬のページでは、展開・馬柱・重賞分析なども見られます。')}
@@ -1804,7 +1876,7 @@ async function main(){ if(!DAYS.length){ $('#hd').innerHTML='<div class="wm"><i>
   document.querySelectorAll('.nav button[data-k]').forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==='up'){ window.scrollTo({top:0,behavior:'smooth'}); return; } if(k==='list'){ showTab('races'); return; } showTab(k); });
   let lastY=window.scrollY; window.addEventListener('scroll',()=>{ const y=window.scrollY; lastY=y; const rs=$('#rsel'); if(rs) rs.classList.toggle('stuck',y>40); },{passive:true});
   const pull=async()=>{ try{ const r=await fetch(`data/${DAY}.json?t=${Date.now()}`,{cache:'no-store'}); if(r.status===404){ location.reload(); return; } const j=await r.json(); if(j.built!==DATA.built){ CACHE[DAY]=j; if(GATED){ try{ const e=await fetch(`data/enc.json?t=${Date.now()}`,{cache:'no-store'}); if(e.ok){ ENC=await e.json(); OPEN={}; for(const pw of (ls.get(LSK,[])||[])){ try{ await openWith(pw); }catch(x){} } } }catch(x){} } await setDay(DAY); keepUOD(); const y=window.scrollY; renderAll(); window.scrollTo(0,y); } }catch(e){} };
-  const TPLV='cbdcacab02';    
+  const TPLV='64f7d364e0';    
   const vReload=v=>{ if(!v||TPLV.indexOf('__')===0||v===TPLV) return false; let t={}; try{ t=JSON.parse(sessionStorage.getItem('sunao_vtry')||'{}'); }catch(e){} if(t.v===v&&Date.now()-(t.t||0)<120000) return false; try{ sessionStorage.setItem('sunao_vtry',JSON.stringify({v,t:Date.now()})); }catch(e){} location.replace(location.pathname+'?v='+v+(cur.race?'&r='+cur.race:'')); return true; };
   let LASTP=Date.now(), BUSY=false;                  
   const tick=async()=>{ if(BUSY||document.hidden) return; BUSY=true;
